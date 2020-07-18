@@ -49,7 +49,7 @@ Github Workflow:
 4. Type into your git terminal ``` git checkout issue-xx ``` to move to that branch
 5. Complete your task and add your code by ``` git add _filename_ ``` 
 6. Type into your git terminal ``` git commit -m "A comment here" ``` to commit your changes
-7. Type into your git terminal ``` git push --set-upstream origin issue-xx ``` to push your changes to the branch issue-xx
+7. Type into your git terminal ``` git push origin issue-xx ``` to push your changes to the branch issue-xx
 8. Type into your git terminal ``` git checkout dev ``` to move to the dev branch. NEVER move to the master branch, even the project lead will 90% of the time be using the dev branch
 9. Type into your git terminal ``` git merge issue-xx ``` to merge your issue branch into the dev branch. 
     - If there is a merge conflict, you aren't communicating. We will have merge conflicts, but our goal is to try as hard as possible to prevent them.
