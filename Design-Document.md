@@ -42,7 +42,8 @@ WHEN the user wants to move an attractions' time
 THEN they can drag and drop attractions between planned days
 
 
-Github Workflow:
+## Github Workflow
+
 1. Decide on a task that was assigned to you
 2. Always type into your terminal ``` git fetch ``` to make sure that you have the most up to date code
 3. Create an issue title issue-xx on Github.com to represent your task
