@@ -58,7 +58,25 @@ THEN they can drag and drop attractions between planned days
     - In the case of a merge conflict, message the project lead to assit you with rectifying it. If it comes down to having code reverted, the default will be to revert the code the merger is trying to add.
 11. Type into your git terminal ``` git push ``` to push your changes 
 
+## Project Outline
+
+Epics: Design UI, Create scripts to collect data, Create scripts to display data
+Initiatives: Outline UI, Collect and document our APIs, 
+Tasks:
+
+Stage 2 Design
+- Implement the CSS Interface
+- Write code to store user selection data
+- Write code to animate or alter DOM elements
 
 ## Issue Assignments
 
 Issue-02 --- Create Issue-02 --- Alec Greene
+                +++ Stage 1 +++
+Issue-03 --- Wireframe Index.html --- Ron Pitts
+Issue-04 --- Research APIs --- Alec Greene
+Issue-05 --- Create Index.html DOM --- Dhurba DC
+Issue-06 --- Design Index.html display Scripts and Test functions --- Alina Gorelik
+                +++ Stage 2 +++
+
+                +++ Stage 3 +++
