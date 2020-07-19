@@ -44,7 +44,7 @@ THEN they can drag and drop attractions between planned days
 
 Github Workflow:
 1. Decide on a task that was assigned to you
-2. Always type into your terminal ``` git pull ``` to make sure that you have the most up to date code
+2. Always type into your terminal ``` git fetch ``` to make sure that you have the most up to date code
 3. Create an issue title issue-xx on Github.com to represent your task
 4. Type into your git terminal ``` git branch issue-xx ``` to create a branch
 5. Type into your git terminal ``` git checkout issue-xx ``` to move to that branch
