@@ -61,4 +61,4 @@ THEN they can drag and drop attractions between planned days
 
 ## Issue Assignments
 
-Issue-02 --- Create Issue-02 :: Alec Greene
+Issue-02 --- Create Issue-02 --- Alec Greene
