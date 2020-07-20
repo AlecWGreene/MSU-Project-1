@@ -71,12 +71,33 @@ Stage 2 Design
 
 ## Issue Assignments
 
-Issue-02 --- Create Issue-02 --- Alec Greene
-                +++ Stage 1 +++
-Issue-03 --- Wireframe Index.html --- Ron Pitts
-Issue-04 --- Research APIs --- Alec Greene
-Issue-05 --- Create Index.html DOM --- Dhurba DC
-Issue-06 --- Design Index.html display Scripts and Test functions --- Alina Gorelik
-                +++ Stage 2 +++
+- Issue-02 --- Create Issue-02 --- Alec Greene
+###              +++ Stage 1 +++
+- Issue-03 --- Wireframe Index.html --- Ron Pitts
+- Issue-04 --- Research APIs --- Alec Greene
+- Issue-05 --- Create Index.html DOM --- Dhurba DC
+- Issue-06 --- Design Index.html display Scripts and Test functions --- Alina Gorelik
+###               +++ Stage 2 +++
 
-                +++ Stage 3 +++
+###               +++ Stage 3 +++
+
+## API Documentation
+
+### OpenTripMap Places API
+Ajax Call:
+- "async" : true
+- "crossDomain" : true
+- "url" : "https://opentripmap-places-v1.p.rapidapi.com/en/places/bbox?"
+    - OPTIONAL:
+        - "&kinds="
+        - "&rate="
+        - "&format="
+        - "limit="
+    - REQUIRED:
+    - "&lon_min"
+    - "&lon_max"
+    - "&lat_min"
+    - "&lat_max"
+- "headers" : {
+    - "x-rapidapi-host" : "opentripmap-places-v1.p.rapidapi.com"
+    - "x-rapidapi-key" : "1e3ad4ad08msh37dbc7f86166d8ap13837fjsncab8be83f428"}
