@@ -9,7 +9,7 @@ SO THAT I can avoid unfavorable weather
 
 APIs:
 - openWeather
-- places
+- places (https://rapidapi.com/opentripmap/api/places1?endpoint=5c1bba13e4b067d7d9563175)
 - yelp GraphQL
 
 Teams:
@@ -86,6 +86,8 @@ Stage 2 Design
 ### OpenTripMap Places API
 
 #### Ajax Calls
+
+User Input => PlacesAPI.GetPlaces => PlacesAPI.GetPlaceInfo => Display To Dom
 
 ##### GET Places by Bounding Box
 Ajax Settings
