@@ -15,9 +15,36 @@
 // OpenTripMap Places API
 // --------------------------------------------------
 
+/**
+ * @class
+ * 
+ * @classdesc The class representation of a place retrieved by the OpenTripMap Places API
+ * 
+ * @property {string} name The name of the place
+ * 
+ * @property {string} imageURL The url linking to an image of the place
+ * 
+ * @property {placeURL} placeURL The url linking to a website for the place
+ * 
+ * @property {string} description An exerpt from the wikipedia page
+ * 
+ * @property {Array<string>} conditions The weather conditions to show this place for
+ * 
+ * @method processObjectId Takes a number representing the xid and makes an API call to retrieve and return the chosen attributes of the place
+ */
 class Places_Place{
-    constructor(){
-
+    /**
+     * @constructor
+     * 
+     * @param {Number} a_response The xid of the place
+     */
+    constructor(a_response){
+        // Store the information in the instance
+        this.name = a_response.name;
+        this.imageURL = a_response.imageURL;
+        this.placeURL = a_response.placeURL;
+        this.description = a_response.description;
+        this.conditions = a_response.conditions;
     }
 }
 
@@ -155,10 +182,6 @@ function handlePlacesRequest(a_request, a_parameters){
     return response;
 }
 
-function processPlacesResponse(a_response){
-    
-
-}
 
 
 // OpenWeather API
@@ -185,68 +208,35 @@ class CityWeather{
     /**
      * @constructor
      * 
-     * @param {Object} a_parameters The parameters to construct the object
+     * @param {Object} a_response The parameters to construct the object, typically a response to the OpenWeather 5-day forecast API
      */
-    constructor(a_parameters){
-        this.name = a_parameters.name;
-        this.temp = a_parameters.temp;
-        this.wind = a_parameters.wind;
-        this.UVIndex = a_parameters.UVIndex;
-        this.time = a_parameters.time;
-        /** @todo Programatically initialize forecast */
-        this.forecast = new CityForecast();
-    }
-}
+    constructor(a_response){
+        // Store city name
+        this.name = a_response.city.name;
+        
+        // The coordinates of the area
+        this.coordinates = {"lat": a_response.city.coord.lat, "lon": a_response.city.coord.lon}
 
-/**
- * @class 
- * 
- * @classdesc An object that represents A 5-day forecast
- * 
- * @property {Array<CityForecastDay>} days The array of forecasts, one for each day
- */
-class CityForecast{
-    /**
-     * @constructor
-     * 
-     * @param {Object} a_parameters
-     */
-    constructor(a_parameters){
-        /** The array of days that have been forecasted */
-        this.days = [];
+        // The forecast of the area
+        this.forecast = [];
 
-        // For each day
+        // For each of the 5 days
         for(let i = 0; i < 5; i++){
-            this.days.push(new CityForecastDay(a_parameters.day1));
-        }
-    }
-}
+            // Initialize the ith array
+            this.forecast[i] = [];
 
-/**
- * @class
- * 
- * @classdesc A day of forecasts for every 3 hours
- * 
- * @property {Object} date The date of the forecast
- * 
- * @property {Object} weather An array of objects representing weather forecasts, where each property is a 3-hour increment from 00 to 21 hours 
- */
-class CityForecastDay{
-    /**
-     * @constructor
-     * 
-     * @param {Object} a_parameters The data for the day's forecast, passed as a property array of forecasts
-     */
-    constructor(a_parameters){
-        this.date = a_parameters.date;
-        this.weather = {"00": a_parameters.forecasts[0],
-                        "03": a_parameters.forecasts[1],
-                        "06": a_parameters.forecasts[2],
-                        "09": a_parameters.forecasts[3],
-                        "12": a_parameters.forecasts[4],
-                        "15": a_parameters.forecasts[5],
-                        "18": a_parameters.forecasts[6],
-                        "21": a_parameters.forecasts[7]}
+            // For each forecast
+            for(let j = 0; j < 8; j++){
+                // Store an object of data at i,j in forecast
+                this.forecast[i][j] = {
+                    "time": a_response.list[8 * i + j].dt_txt,
+                    "temp": a_response.list[8 * i + j].main.temp,
+                    "wind": a_response.list[8 * i + j].wind.speed,
+                    "conditions": a_response.list[8 * i + j].weather[0].description,
+                    "conditionsIcon": a_response.list[8 * i + j].weather[0].icon
+                }
+            }
+        }
     }
 }
 
@@ -263,7 +253,7 @@ class CityForecastDay{
  */
 function handleWeatherRequest(a_request, a_parameters){
     /** URL for the OpenWeather API */
-    var url = "api.openweathermap.org/data/2.5/";
+    var url = "http://api.openweathermap.org/data/2.5/";
 
     /** The settings for the Ajax call */
     var settings = {"method": "GET", "url": url}
@@ -273,12 +263,12 @@ function handleWeatherRequest(a_request, a_parameters){
         // CASE: Get the current weather 
         case "Weather":
             // Append method call to url
-            url += "weather?";
+            url += "weather\?";
             break;
         // CASE: Get the forecast for the next 5 days
         case "Forecast":
             // Append method call to url
-            url += "forecast/climate?";
+            url += "forecast\?";
             break;
         // CASE: Request was not valid
         default:
@@ -287,7 +277,7 @@ function handleWeatherRequest(a_request, a_parameters){
     }
 
     // Verify required parameters
-    if(a_parameters["name"]){ url += "q=" + a_parameters.name; }
+    if(a_parameters["city"]){ url += "q=" + a_parameters.city; }
     else{
         console.log("ERROR: The request passed to OpenWeather " + a_request + "was passed invalid parameters: " + a_parameters);
     }
@@ -301,18 +291,18 @@ function handleWeatherRequest(a_request, a_parameters){
 
     // Update URL
     settings.url = url;
+    console.log(url);
 
     // Make Ajax call
     var t_return;
     $.ajax(settings).then(function(response){
-        t_return = response;
+        console.log(response);
+        var t_cityWeather = new CityWeather(response);
+        console.log(t_cityWeather);
     });
-    return response;
 }
 
-function processWeatherResponse(a_response){
 
-}
 
 // ==================================================
 // DISPLAY FUNCTIONS
