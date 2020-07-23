@@ -70,83 +70,81 @@ class Places_Place{
  * @returns {Response}
  */
 function handlePlacesRequest(a_request, a_parameters){
+    /** The base url for the API */
+    var url = "https://opentripmap-places-v1.p.rapidapi.com/en/places/";
+
     /** the settings for Ajax */
     var settings = {
         "async": true,
         "crossDomain": true,
-        "url": this.url,
+        "url": url,
         "method" : "GET",
         "headers": {
             "x-rapidapi-host": "opentripmap-places-v1.p.rapidapi.com",
             "x-rapidapi-key" : "1e3ad4ad08msh37dbc7f86166d8ap13837fjsncab8be83f428"
         }
     }
-
-    /** The base url for the API */
-    var url = "https://opentripmap-places-v1.p.rapidapi.com/en/places/";
     
     // Depending on the passed request type
     switch(a_request){
         // CASE: Get places by bounding box
         case "PlacesByBBox": 
             // Append command to url
-            url += "bbox?";
+            url += "bbox?format=json";
 
             // Add optional parameters
-            if(a_parameters["kinds"]){ url += a_parameters.kinds; }
-            if(a_parameters["rate"]){ url += a_parameters.rate; }
-            url += "&format=JSON";
-            if(a_parameters["limit"]){ url += a_parameters.limit; }
+            if(a_parameters["kinds"]){ url += "&kinds=" + a_parameters.kinds; }
+            if(a_parameters["rate"]){ url += "&rate=" + a_parameters.rate; }
+            if(a_parameters["limit"]){ url += "&limit=" + a_parameters.limit; }
 
             // Verify required parameters
-            if(a_parameters["lonMin"] 
-               && a_parameters["lonMax"] 
-               && a_parameters["latMin"] 
-               && a_parameters["latMax"]){
+            if(a_parameters["lon_min"] 
+               && a_parameters["lon_max"] 
+               && a_parameters["lat_min"] 
+               && a_parameters["lat_max"]){
                 // Add parameters to url
-                url += "&lon_min=" + a_parameters.lonMin 
-                    + "&lon_max=" + a_parameters.lonMax 
-                    + "&lat_min=" + a_parameters.latMin
-                    + "&lat_max=" + a_parameters.latMax;
+                url += "&lon_min=" + a_parameters.lon_min 
+                    + "&lon_max=" + a_parameters.lon_max 
+                    + "&lat_min=" + a_parameters.lat_min
+                    + "&lat_max=" + a_parameters.lat_max;
             }
             else{
                 // Console log error
-                console.log("ERROR: Parameters give to Places API Handler for request: " + a_request + " was not paired with correct parameters: " + a_parameters);
+                console.log("ERROR: Parameters give to Places API Handler for request: " + a_request + " was not paired with correct parameters: " + JSON.stringify(a_parameters));
             }
 
             break;
         // CASE: Get places by location and radius
         case "PlacesByRadius": 
             // Append command to url
-            url += "radius?";
+            url += "radius?format=json";
 
             // Add optional parameters
-            if(a_parameters["kinds"]){ url += a_parameters.kinds; }
-            url += "&format=JSON";
-            if(a_parameters["rate"]){ url += a_parameters.rate; }
-            if(a_parameters["limit"]){ url += a_parameters.limit; }
+            if(a_parameters["kinds"]){ url += "&kinds=" + a_parameters.kinds; }
+            if(a_parameters["rate"]){ url += "&rate=" + a_parameters.rate; }
+            if(a_parameters["limit"]){ url += "&limit=" + a_parameters.limit; }
 
 
             // Verify required parameters
-            if(a_parameters["lat"] && a_parameters["lon"]){
+            if(a_parameters["lat"] && a_parameters["lon"] && a_parameters["radius"]){
                 // Add parameters to url
-                url += "&lat=" + a_parameters.lat + "&lon=" + a_parameters.lon;
+                url += "&radius=" + a_parameters.radius + "&lat=" + a_parameters.lat + "&lon=" + a_parameters.lon;
             }
             else{
                 // Console log error
-                console.log("ERROR: Parameters give to Places API Handler for request: " + a_request + " was not paired with correct parameters: " + a_parameters);
+                console.log("ERROR: Parameters give to Places API Handler for request: " + a_request + " was not paired with correct parameters: " + JSON.stringify(a_parameters));
             }
             break;
         // CASE: Get coordinates
         case "Coordinates": 
             // Append command to url
-            url += "geoname?";
+            url += "geoname?format=json";
 
             // Add optional parameters
-            if(a_parameters["country"]){ url += a_parameters.country; }
+            if(a_parameters["country"]){ url += "&country=" + a_parameters.country; }
 
             // Verify required parameters
-            if(a_parameters["name"]){ url += a_parameters.name; }
+            if(a_parameters["name"]){ url += "&name=" + a_parameters.name; }
             else{
                 // Console log error
                 console.log("ERROR: Parameters give to Places API Handler for request: " + a_request + " was not paired with correct parameters: " + a_parameters);
@@ -175,11 +173,12 @@ function handlePlacesRequest(a_request, a_parameters){
     settings.url = url;
 
     // Return API response
-    var t_response;
+    var t_response = null;
     $.ajax(settings).done(function(response){
+        console.log(response);
         t_reponse = response;
+        return t_response;
     })
-    return response;
 }
 
 
@@ -287,7 +286,7 @@ function handleWeatherRequest(a_request, a_parameters){
     if(a_parameters["country"]){ url += "," + a_parameters.country; }
 
     // Append API Key to the url
-    url += "&appid=14dcce84f7b94920cbe9d542aace61ee";
+    url += "&appid=14dcce84f7b94920cbe9d542aace61ee&units=imperial";
 
     // Update URL
     settings.url = url;
