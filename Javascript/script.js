@@ -7,6 +7,14 @@
 // GLOBAL VARIABLES
 // ==================================================
 
+// Cache Variables
+// --------------------------------------------------
+
+/** Holds value of API calls */
+var lastPlaceSearch, lastWeatherSearch;
+/** Bools to track Async methods */
+var isSearchingPlaces, isSearchingWeather;
+
 
 // ==================================================
 // AJAX CALLERS
@@ -44,6 +52,7 @@ class Places_Place{
         this.imageURL = a_response.imageURL;
         this.placeURL = a_response.placeURL;
         this.description = a_response.description;
+        this.kinds = a_response.kinds;
         this.conditions = a_response.conditions;
     }
 }
@@ -67,9 +76,12 @@ class Places_Place{
  * 
  * @param {Object} a_parameters A object whose properties are members to pass to the API
  * 
- * @returns {Response}
+ * @todo Fix kinds parameters
  */
 function handlePlacesRequest(a_request, a_parameters){
+    // Search is running
+    isSearchingPlaces = true;
+
     /** The base url for the API */
     var url = "https://opentripmap-places-v1.p.rapidapi.com/en/places/";
 
@@ -174,11 +186,37 @@ function handlePlacesRequest(a_request, a_parameters){
 
     // Return API response
     var t_response = null;
-    $.ajax(settings).done(function(response){
-        console.log(response);
-        t_reponse = response;
-        return t_response;
+    $.ajax(settings).done(function(a_response){
+        console.log(a_response);
+        
+        // If the request was for place info
+        if(a_request === "PlaceInfo"){
+            lastPlaceSearch = new Places_Place(a_response);
+        }
+
+        // Search over
+        isSearchingPlaces = false;
     })
+}
+
+async function searchLocation(a_parameters){
+    // Create parameter object
+    var t_params = {
+        "limit": 20
+    }
+
+    if(a_parameters[""]){}
+    if(){}
+    if(){}
+    if(){}
+    if(){}
+    if(){}
+
+    // Call Places Ajax handler
+    handlePlacesRequest("PlacesByRadius", );
+
+    // Wait for Ajax call to finish
+    await !isSearchingPlaces;
 }
 
 
