@@ -7,9 +7,10 @@
 
   #main {
       margin-bottom: 50px;
-      padding: 20px 20px 30px 20px;
+      padding: 0px 0px 30px 0px;
+     
   }
-  
+
   #orange{
     background-color:orange;
   }
@@ -26,6 +27,7 @@
   
   #blue {
     background-color:blue;
+    padding-top: 30px;
   }
 
   .selection {
@@ -35,6 +37,7 @@
   #purple {
     background-color: blueviolet;
     margin: auto;
+   
   }
 
 
