@@ -9,8 +9,8 @@ style more/polish -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<link rel="stylesheet" href="style.css">
 
   <title>Document</title>
 </head>
@@ -43,9 +43,9 @@ style more/polish -->
               <div class="selection">
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
-                    <label class="input-group-text" for="inputGroupSelect01">Country</label>
+                    <label class="input-group-text" for="input-select-country">Country</label>
                   </div>
-                  <select class="custom-select" id="inputGroupSelect01">
+                  <select class="custom-select" id="input-select-country">
                     <option selected>Choose...</option>
                     <option value="1">One</option>
                     <option value="2">Two</option>
@@ -56,20 +56,20 @@ style more/polish -->
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-default">City</span>
                   </div>
-                  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="input-text-city">
                 </div>
                 <div class="input-group mb-3">
                   <div class="input-group-prepend">
-                    <label class="input-group-text" for="inputGroupSelect03">State</label>
+                    <label class="input-group-text" for="input-select-state">State</label>
                   </div>
-                  <select class="custom-select" id="inputGroupSelect03">
+                  <select class="custom-select" id="input-select-state">
                     <option selected>Choose...</option>
                     <option value="1">One</option>
                     <option value="2">Two</option>
                     <option value="3">Three</option>
                   </select>
                 </div>
-              <ul class="list-group" id="listy">
+              <ul class="list-group" id="list-kinds">
                 <li class="list-group-item active" data-target=“natural”>Nature</li>
                 <li class="list-group-item" data-target=“shops”>Shops</li>
                 <li class="list-group-item" data-target=“museums”>Museums</li>
@@ -81,7 +81,7 @@ style more/polish -->
                 <li class="list-group-item" data-target=“sports”>Sports</li>
                 <li class="list-group-item" data-target=“food”>Food</li>
               </ul>
-              <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="srch">
+              <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="search-btn">
                 Submit
               </button>
                 </div>
@@ -98,6 +98,38 @@ style more/polish -->
                     <li class="list-group-item">Porta ac consectetur ac</li>
                     <li class="list-group-item">Vestibulum at eros</li>
                   </ul> -->
+
+                  <div class="w-full md:w-3/5 mx-auto p-8">
+                    <p>Open <strong>one</strong></p>
+                    <div class="shadow-md">
+                       <div class="tab w-full overflow-hidden border-t">
+                          <input class="absolute opacity-0" id="tab-single-one" type="radio" name="tabs2">
+                          <label class="block p-5 leading-normal cursor-pointer" for="tab-single-one">list-item-1</label>
+                          <div class="tab-content overflow-hidden border-l-2 bg-gray-100 border-indigo-500 leading-normal">
+                             <p class="p-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, architecto, explicabo perferendis nostrum, maxime impedit atque odit sunt pariatur illo obcaecati soluta molestias iure facere dolorum adipisci eum? Saepe, itaque.</p>
+                          </div>
+                       </div>
+                       <div class="tab w-full overflow-hidden border-t">
+                          <input class="absolute opacity-0" id="tab-single-two" type="radio" name="tabs2">
+                          <label class="block p-5 leading-normal cursor-pointer" for="tab-single-two">list-item-2</label>
+                          <div class="tab-content overflow-hidden border-l-2 bg-gray-100 border-indigo-500 leading-normal">
+                             <p class="p-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, architecto, explicabo perferendis nostrum, maxime impedit atque odit sunt pariatur illo obcaecati soluta molestias iure facere dolorum adipisci eum? Saepe, itaque.</p>
+                          </div>
+                       </div>
+
+                       <div class="tab w-full overflow-hidden border-t">
+                          <input class="absolute opacity-0" id="tab-single-three" type="radio" name="tabs2">
+                          <label class="block p-5 leading-normal cursor-pointer" for="tab-single-three">Label Three</label>
+                          <div class="tab-content overflow-hidden border-l-2 bg-gray-100 border-indigo-500 leading-normal">
+                             <p class="p-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, architecto, explicabo perferendis nostrum, maxime impedit atque odit sunt pariatur illo obcaecati soluta molestias iure facere dolorum adipisci eum? Saepe, itaque.</p>
+                          </div>
+                       </div>
+
+                    </div>
+                 </div>
+
+
+
                   <div class="scrollable">
                     <div data-spy="scroll" data-target="#list-example" data-offset="0" class="scrollspy-example">
                       <div class="wrapper">
