@@ -391,10 +391,10 @@ $(document).ready(function () {
         searchCountry = $(this).find("option:selected").val(); 
         console.log ("You have selected the country - " + searchCountry);
         if (searchCountry !== "USA") {
-            $ ("#input-group-state").hide();
+            $ (".select-state").hide();
             searchState = "";
         }else{
-            $ ("#input-group-state").show() 
+            $ (".select-state").show() 
         }
         
     });
