@@ -23,6 +23,10 @@ const stateNames = [
     'Canada', 'France', 'Germany','other'
 ];
 
+let searchCountry = "USA";
+let searchState = "";
+let searchCity = "";
+
 // Cache Variables
 // --------------------------------------------------
 
@@ -381,25 +385,64 @@ var responseArray = [response1, response2,response1, response2,response1, respon
 // ==================================================
 $(document).ready(function () {
    
+    //Dynamically build dropdown options list for countries
     setCountry();
+
+    //Dynamically build dropdown options list for the states
     setStates();
-
-    let searchCountry = "USA";
-
-    //grab search country from the select country dropdown box
+ 
+    //If user updated country, grab the country from the select country dropdown box
     $("#input-select-country").change(function(){
         searchCountry = $(this).find("option:selected").val(); 
         console.log ("You have selected the country - " + searchCountry);
         if (searchCountry !== "USA") {
             $ ("#input-group-state").hide();
-            searchState = "";
+            $ ("#input-group-state").val('')
         }else{
             $ ("#input-group-state").show() 
         }
         
     });
 
-    //Set Country
+    //If user selected state, grab the state from the select state dropdown box
+    $("#input-select-state").change(function(){  
+        let searchState = $(this).find("option:selected").val(); 
+        console.log ("You have selected the state - " + searchState);
+    });
+
+
+    //Main Routine
+    $("#search-btn").click(function (event) {
+        event.preventDefault();
+
+         //grab search country from the select country dropdown box
+         let searchCountry = $("#input-select-country").val().trim();
+
+         //grab search state from the select state dropdown box
+         let searchState = $("#input-select-state").val().trim();
+         if (searchCountry !== "USA") {
+             searchState = ""
+         }
+
+        //grab search city from input field
+         let searchCity = $("#input-text-city").val().trim();
+         if (searchCity === ''){
+            alert('City can not be left blank');
+         }
+
+         console.log ("Search button was clicked!");
+         console.log ("You have entered the city name - " + searchCity);
+         console.log ("You have selected the state - " + searchState);
+         console.log ("You have selected the country - " + searchCountry);
+    
+         // currentWeather(searchCity);
+        
+         // fiveDayForecast(searchCity);
+
+         // updateHistory(searchCity);
+    });
+
+    //Dynamically build dropdown options list for the country
     function setCountry(){
         let selectCountry = document.getElementById("input-select-country");
         for (var i = 0; i < countryNames.length; i++) {
@@ -410,7 +453,7 @@ $(document).ready(function () {
         }   
     }
 
-    //Set States
+    //Dynamically build dropdown options list for the US States
     function setStates(){
         
 	    selectState = document.getElementById("input-select-state");
