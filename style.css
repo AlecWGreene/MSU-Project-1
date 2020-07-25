@@ -1,0 +1,70 @@
+.container{
+    text-align: center;
+    justify-content: center;
+    background-color: aquamarine;
+    margin-top: 50px;
+  }
+
+  #main {
+      margin-bottom: 50px;
+      padding: 20px 20px 30px 20px;
+  }
+  
+  #orange{
+    background-color:orange;
+  }
+  
+  #green{
+    background-color:green;
+    
+  }
+  
+  #red{
+    background-color:red;
+    padding-bottom: 30px;
+  }
+  
+  #blue {
+    background-color:blue;
+  }
+
+  .selection {
+      margin-top: 10px;
+  }
+
+  #purple {
+    background-color: blueviolet;
+    margin: auto;
+  }
+
+
+  .scrollable{
+    height: 600px; /* or any value */
+    overflow-y: auto;
+    margin: auto;
+  }
+
+  .list-group {
+      margin-bottom: 25px;
+  }
+
+  .pagination {
+      text-align: center;
+      justify-content: center;
+      margin-top: 10px;
+  }
+
+  #srch {
+      margin-top: 10px;
+  }
+
+  #topsearch {
+      margin-bottom: 15px;
+      margin-top: 5px;
+  }
+
+  /* #results{
+    position: relative;
+    overflow-y: scroll;
+    height: 75px;
+  } */
