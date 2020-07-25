@@ -41,22 +41,24 @@ style more/polish -->
           <div class="col-md-4" id="red">
               <!-- <h2>Form</h2> -->
               <div class="selection">
-                <div class="input-group mb-3">
+                <div class="input-group mb-3" id="input-group-country">
                   <div class="input-group-prepend">
                     <label class="input-group-text" for="input-select-country">Country</label>
                   </div>
                   <select class="custom-select" id="input-select-country">
-                    <option selected>Choose...</option>
-                   
+                    <option selected value="USA">USA</option>
+                    <option value="1">Choose</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
                   </select>
                 </div>
-                <div class="input-group mb-3">
+                <div class="input-group mb-3" id="input-group-city">
                   <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-default">City</span>
                   </div>
                   <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="input-text-city">
                 </div>
-                <div class="input-group mb-3">
+                <div class="input-group mb-3" id="input-group-state">
                   <div class="input-group-prepend">
                     <label class="input-group-text" for="input-select-state">State</label>
                   </div>
