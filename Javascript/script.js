@@ -9,6 +9,7 @@
 
 // Form Variables
 // --------------------------------------------------
+
 const stateNames = [
     'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut',
     'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas',
@@ -23,25 +24,15 @@ const stateNames = [
     'Canada', 'France', 'Germany','other'
 ];
 
-// Cache Variables
-// --------------------------------------------------
-
-/** Holds value of API calls */
-var lastPlaceSearch, lastWeatherSearch;
-/** Bools to track Async methods */
-var isSearchingPlaces, isSearchingWeather;
 
 // Search Variables
 // --------------------------------------------------
-var searchResults = [];
 
-// ==================================================
-// AJAX CALLERS
-// ==================================================
-
-var weatherResults;
+/* Base url for OpenTripMap Places API */
 var api_url_places = "https://opentripmap-places-v1.p.rapidapi.com/en/places/";
+/* Base url for openWeather 5-day Forecast API */
 var api_url_weather = "http://api.openweathermap.org/data/2.5/forecast\?";
+/* The settings to pass to the Ajax handler for the OpenTripMap Places API */
 var api_settings_places = {
         "async": true,
         "crossDomain": true,
@@ -53,13 +44,23 @@ var api_settings_places = {
         }
     }
 
-function searchLocation(a_parameters){
-  weatherResults = getForecast(a_parameters);
-}
+/* The collection of objects containing place information returned by the APIs */
+var searchResults = [];
+
+
+
+
+
+// ==================================================
+// AJAX CALLERS
+// ==================================================
 
 /**
+ * @function getForecast 
  * 
+ * @param {Object} a_parameters An object with properties City, State, Country
  * 
+ * @description Gets the forecast for the passed city information and calls @see getPlaces
  */
 function getForecast(a_parameters){
     
@@ -88,6 +89,13 @@ function getForecast(a_parameters){
     });
 }
 
+/**
+ * @function getPlaces
+ * 
+ * @param {Response} a_response A response from the OpenTripMap Places method GetPlacesByRadius
+ * 
+ * @description Takes a response from the API and calls @see getPlaceInfo on each feature returned
+ */
 function getPlaces(a_response){
 
     // Base places url
@@ -111,6 +119,13 @@ function getPlaces(a_response){
     });
 }
 
+/**
+ * @function getPlaceInfo
+ * 
+ * @param {String} a_placeId The xid of the place
+ * 
+ * @description Takes an object containing information retrieved from the OpenTripMap Places API and pushes it to searchResults 
+ */
 function getPlaceInfo(a_placeId){
     // Helper variables to return
     var t_return;
@@ -141,6 +156,9 @@ function getPlaceInfo(a_placeId){
 
     });
 }
+
+
+
 
 
 // ==================================================
