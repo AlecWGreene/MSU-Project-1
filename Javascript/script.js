@@ -10,7 +10,7 @@
 // Form Variables
 // --------------------------------------------------
 
-  const states = [
+const states = [
     ['Arizona', 'AZ'],
     ['Alabama', 'AL'],
     ['Alaska', 'AK'],
@@ -494,14 +494,18 @@ $(document).ready(function () {
          //grab the interest/kind that user selected
          if (searchKindId === "") {
             searchKindId = $("#list-kinds li.active").attr("data-target");
+            
         }
+        
+        var searchKind = $("#list-kinds li.active").text();
 
          console.log ("Search button was clicked!");
          console.log ("You have entered the city name - " + searchCity);
          console.log ("You have selected the state - " + searchState);
          console.log ("You have selected the country - " + searchCountry);      
-         console.log ("You have selected the kind - " + searchKindId);
-         
+         console.log ("You have selected the kindID - " + searchKindId);
+         console.log ("You have selected the kind - " + searchKind);
+
         // handleWeatherRequest("Forecast",{"city": "Tokyo", "country": "JP"})
 
          //   handleWeatherRequest("Weather",{"city": searchCity})
