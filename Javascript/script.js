@@ -75,17 +75,11 @@ let searchState = "";
 let searchCity = "";
 let searchKindId = "";
 
-// Cache Variables
-// --------------------------------------------------
 
-/** Holds value of API calls */
-var lastPlaceSearch, lastWeatherSearch;
-/** Bools to track Async methods */
-var isSearchingPlaces, isSearchingWeather;
 
 
 // ==================================================
-// AJAX CALLERS
+// GLOBAL VARIABLES
 // ==================================================
 
 // Search Variables
@@ -296,6 +290,9 @@ $(document).ready(function () {
     $("#search-btn").click(function (event) {
         event.preventDefault();
 
+        // Clear search results
+        searchResults = [];
+
          //grab search country from the select country dropdown box
          let searchCountry = $("#input-select-country").val().trim();
 
@@ -319,6 +316,7 @@ $(document).ready(function () {
             
         }
         
+        // The kinds of places to return
         var searchKind = $("#list-kinds li.active").text();
 
          console.log ("Search button was clicked!");
@@ -328,18 +326,14 @@ $(document).ready(function () {
          console.log ("You have selected the kindID - " + searchKindId);
          console.log ("You have selected the kind - " + searchKind);
 
-        // handleWeatherRequest("Forecast",{"city": "Tokyo", "country": "JP"})
+        // Combine search paremters into an object
+        var t_searchParameters = {"city": searchCity}
+        if(searchState != "" && searchState != null && searchState != "Choose..." && searchCountry === "US"){ t_searchParameters["state"] = searchState; }
+        if(searchCountry != "" && searchCountry != null){ t_searchParameters["country"] = searchCountry;}
+        console.log(t_searchParameters);
 
-         //   handleWeatherRequest("Weather",{"city": searchCity})
-         //http://api.openweathermap.org/data/2.5/weather?q=Chicago&appid=14dcce84f7b94920cbe9d542aace61ee&units=imperial
-         //   console.log (response);
-         
-         
-            // currentWeather(searchCity);
-        
-         // fiveDayForecast(searchCity);
-
-         // updateHistory(searchCity);
+        // Gets the forecast, and calls methods to get places
+        getForecast(t_searchParameters);
     });
 
     //Dynamically build dropdown options list for the country
