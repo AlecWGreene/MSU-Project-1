@@ -506,6 +506,8 @@ $(document).ready(function () {
          console.log ("You have selected the kindID - " + searchKindId);
          console.log ("You have selected the kind - " + searchKind);
 
+         displayCityHeader (searchCity, searchState, searchCountry, searchKind);
+
         // handleWeatherRequest("Forecast",{"city": "Tokyo", "country": "JP"})
 
          //   handleWeatherRequest("Weather",{"city": searchCity})
@@ -519,6 +521,11 @@ $(document).ready(function () {
 
          // updateHistory(searchCity);
     });
+    function  displayCityHeader (searchCity, searchState, searchCountry, searchKind){
+
+        let cityHeader = $("#orange").html("Explore " + searchKind + " in " + searchCity + ", "  + searchState);
+        $("container").append(cityHeader);
+    };
 
     //Dynamically build dropdown options list for the country
     function setCountry(){
