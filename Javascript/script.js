@@ -9,23 +9,71 @@
 
 // Form Variables
 // --------------------------------------------------
-const stateNames = [
-    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut',
-    'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas',
-    'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 
-    'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 
-    'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon',
-    'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 
-    'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
-  ];
 
-  const countryNames = [
-    'Canada', 'France', 'Germany','other'
+  const states = [
+    ['Arizona', 'AZ'],
+    ['Alabama', 'AL'],
+    ['Alaska', 'AK'],
+    ['Arkansas', 'AR'],
+    ['California', 'CA'],
+    ['Colorado', 'CO'],
+    ['Connecticut', 'CT'],
+    ['Delaware', 'DE'],
+    ['Florida', 'FL'],
+    ['Georgia', 'GA'],
+    ['Hawaii', 'HI'],
+    ['Idaho', 'ID'],
+    ['Illinois', 'IL'],
+    ['Indiana', 'IN'],
+    ['Iowa', 'IA'],
+    ['Kansas', 'KS'],
+    ['Kentucky', 'KY'],
+    ['Louisiana', 'LA'],
+    ['Maine', 'ME'],
+    ['Maryland', 'MD'],
+    ['Massachusetts', 'MA'],
+    ['Michigan', 'MI'],
+    ['Minnesota', 'MN'],
+    ['Mississippi', 'MS'],
+    ['Missouri', 'MO'],
+    ['Montana', 'MT'],
+    ['Nebraska', 'NE'],
+    ['Nevada', 'NV'],
+    ['New Hampshire', 'NH'],
+    ['New Jersey', 'NJ'],
+    ['New Mexico', 'NM'],
+    ['New York', 'NY'],
+    ['North Carolina', 'NC'],
+    ['North Dakota', 'ND'],
+    ['Ohio', 'OH'],
+    ['Oklahoma', 'OK'],
+    ['Oregon', 'OR'],
+    ['Pennsylvania', 'PA'],
+    ['Rhode Island', 'RI'],
+    ['South Carolina', 'SC'],
+    ['South Dakota', 'SD'],
+    ['Tennessee', 'TN'],
+    ['Texas', 'TX'],
+    ['Utah', 'UT'],
+    ['Vermont', 'VT'],
+    ['Virginia', 'VA'],
+    ['Washington', 'WA'],
+    ['West Virginia', 'WV'],
+    ['Wisconsin', 'WI'],
+    ['Wyoming', 'WY'],
 ];
 
-let searchCountry = "USA";
+  const countryNames = [
+    ['Canada', 'CA'],
+    ['France', 'FR'],
+    ['Germany','DE'],
+    ['Japan',  'JP'],
+];
+
+let searchCountry = "US";
 let searchState = "";
 let searchCity = "";
+let searchKindId = "";
 
 // Cache Variables
 // --------------------------------------------------
@@ -394,24 +442,35 @@ $(document).ready(function () {
     //If user updated country, grab the country from the select country dropdown box
     $("#input-select-country").change(function(){
         searchCountry = $(this).find("option:selected").val(); 
+        searchCountryName = $(this).find("option:selected").text();
         console.log ("You have selected the country - " + searchCountry);
-        if (searchCountry !== "USA") {
+        if (searchCountry !== "US") {
             $ ("#input-group-state").hide();
             $ ("#input-group-state").val('')
         }else{
             $ ("#input-group-state").show() 
+
         }
         
     });
 
     //If user selected state, grab the state from the select state dropdown box
     $("#input-select-state").change(function(){  
-        let searchState = $(this).find("option:selected").val(); 
-        console.log ("You have selected the state - " + searchState);
-    });
+        let searchState = $(this).find("option:selected").val();   
+        let searchStateName = $(this).find("option:selected").text();   
+        console.log ("Name:" + searchStateName) 
+        console.log ("Value:" + searchState)  
+    });    
 
+    //If user clicks on interest (kind), then select this list-group item
+      $('.list-group-item').click(function(e) {
+         e.preventDefault();
+         $(this).addClass('active').siblings().removeClass('active');        
+            searchKindId = $(this).attr("data-target");
+            console.log("ActiveID selected before search: " + searchKindId);
+     });
 
-    //Main Routine
+    //Deliver API search parameters when search button is clicked
     $("#search-btn").click(function (event) {
         event.preventDefault();
 
@@ -419,9 +478,11 @@ $(document).ready(function () {
          let searchCountry = $("#input-select-country").val().trim();
 
          //grab search state from the select state dropdown box
-         let searchState = $("#input-select-state").val().trim();
-         if (searchCountry !== "USA") {
+         let searchState = $("#input-select-state").val().trim();       
+
+         if (searchCountry !== "US") {
              searchState = ""
+             $ ("#input-group-state").val('')
          }
 
         //grab search city from input field
@@ -430,12 +491,25 @@ $(document).ready(function () {
             alert('City can not be left blank');
          }
 
+         //grab the interest/kind that user selected
+         if (searchKindId === "") {
+            searchKindId = $("#list-kinds li.active").attr("data-target");
+        }
+
          console.log ("Search button was clicked!");
          console.log ("You have entered the city name - " + searchCity);
          console.log ("You have selected the state - " + searchState);
-         console.log ("You have selected the country - " + searchCountry);
-    
-         // currentWeather(searchCity);
+         console.log ("You have selected the country - " + searchCountry);      
+         console.log ("You have selected the kind - " + searchKindId);
+         
+        // handleWeatherRequest("Forecast",{"city": "Tokyo", "country": "JP"})
+
+         //   handleWeatherRequest("Weather",{"city": searchCity})
+         //http://api.openweathermap.org/data/2.5/weather?q=Chicago&appid=14dcce84f7b94920cbe9d542aace61ee&units=imperial
+         //   console.log (response);
+         
+         
+            // currentWeather(searchCity);
         
          // fiveDayForecast(searchCity);
 
@@ -447,8 +521,8 @@ $(document).ready(function () {
         let selectCountry = document.getElementById("input-select-country");
         for (var i = 0; i < countryNames.length; i++) {
             var option = document.createElement("option");
-            option.text = countryNames[i];
-            option.value = countryNames[i];
+            option.text = countryNames[i][0];
+            option.value = countryNames[i][1];
             selectCountry.add(option);
         }   
     }
@@ -458,10 +532,10 @@ $(document).ready(function () {
         
 	    selectState = document.getElementById("input-select-state");
 	    
-	    for (var i = 0; i < stateNames.length; i++) {
-            var option = document.createElement("option");
-            option.text = stateNames[i];
-            option.value = stateNames[i];
+	    for (var i = 0; i < states.length; i++) {
+            var option = document.createElement("option");           
+            option.text = states[i][0];
+            option.value = states[i][1];          
             selectState.add(option);
         }   
     }
