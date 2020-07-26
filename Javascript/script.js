@@ -71,6 +71,7 @@ const states = [
 ];
 
 let searchCountry = "US";
+let searchCountryName = "USA";
 let searchState = "";
 let searchCity = "";
 let searchKindId = "";
@@ -470,7 +471,7 @@ $(document).ready(function () {
             console.log("ActiveID selected before search: " + searchKindId);
      });
 
-    //Deliver API search parameters when search button is clicked
+    //Deliver API search parameters when SEARCH button is clicked
     $("#search-btn").click(function (event) {
         event.preventDefault();
 
@@ -488,7 +489,8 @@ $(document).ready(function () {
         //grab search city from input field
          let searchCity = $("#input-text-city").val().trim();
          if (searchCity === ''){
-            alert('City can not be left blank');
+            alert('City can not be left blank');  //remove
+            
          }
 
          //grab the interest/kind that user selected
@@ -506,7 +508,7 @@ $(document).ready(function () {
          console.log ("You have selected the kindID - " + searchKindId);
          console.log ("You have selected the kind - " + searchKind);
 
-         displayCityHeader (searchCity, searchState, searchCountry, searchKind);
+         displayCityHeader (searchCity, searchState, searchCountryName, searchKind);
 
         // handleWeatherRequest("Forecast",{"city": "Tokyo", "country": "JP"})
 
@@ -521,10 +523,16 @@ $(document).ready(function () {
 
          // updateHistory(searchCity);
     });
-    function  displayCityHeader (searchCity, searchState, searchCountry, searchKind){
-
-        let cityHeader = $("#orange").html("Explore " + searchKind + " in " + searchCity + ", "  + searchState);
-        $("container").append(cityHeader);
+    function  displayCityHeader (searchCity, searchState, searchCountryName, searchKind){
+        
+        let cityHeader = ""
+        if (searchCountryName === "USA") {
+            cityHeader = $("#orange").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchState + "</h4>");
+        }else{
+            cityHeader = $("#orange").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchCountryName+ "</h4>");
+        }
+         $("container").append(cityHeader);
+        
     };
 
     //Dynamically build dropdown options list for the country
