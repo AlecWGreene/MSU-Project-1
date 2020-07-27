@@ -250,8 +250,38 @@ var responseArray = [response1, response2,response1, response2,response1, respon
         cityHeader = $("#orange").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchCountryName+ "</h4>");
     }
      $("container").append(cityHeader);
-    
-};
+ };
+   
+function currentWeather (searchCity){
+
+        var APIKey = "b842e13062ebcdc52faeb1014bc3a489";
+        let queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + searchCity + "&appid=" + APIKey;
+        console.log("Weather Query: " + queryURL);
+
+        //ajax call for local weather
+        $.ajax({
+          url: queryURL,
+          method: "GET"
+        }).then(function(response) {
+            
+            // Convert the temp to fahrenheit
+            let tempF = (response.main.temp - 273.15) * 1.80 + 32;
+            let roundedTemp = Math.floor(tempF);
+
+         
+            //temp elements added to html
+            // let tempDataF = $("<p>").text("Temp: " + roundedTemp + "F");
+            // let windData = $("<p>").text("Wind: " + response.wind.speed + "mph");
+            // var iconCode = response.weather[0].icon;
+            // var iconUrl = "https://openweathermap.org/img/wn/" + iconCode + ".png";
+            // let weatherImg = $("<img>").attr("src", iconUrl);
+            //cityData.append(weatherImg, tempDataF, windData );
+            var cityData = "<tr><td>" + response.name + " weather today: T: " + roundedTemp + "F</td><td>W: " + response.wind.speed + "mph</td></tr>";
+            $("#displayWeather").append(cityData);
+
+    }); //function response
+}; //currentWeather
+
 //$(".city").html("<h1>" + response.name + " Weather</h1>");
 //cityData.append(weatherImg, windData, humidityData, tempData, tempDataF);
 //$("container").append(cityData);
@@ -363,7 +393,7 @@ $(document).ready(function () {
          //   console.log (response);
          
          
-            // currentWeather(searchCity);
+        currentWeather(searchCity);
         
          // fiveDayForecast(searchCity);
         // Combine search paremters into an object
