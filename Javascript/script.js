@@ -245,11 +245,11 @@ var responseArray = [response1, response2,response1, response2,response1, respon
         
     let cityHeader = ""
     if (searchCountryName === "USA") {
-        cityHeader = $("#orange").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchState + "</h4>");
+        cityHeader = $("#destination-info").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchState + "</h4>");
     }else{
-        cityHeader = $("#orange").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchCountryName+ "</h4>");
+        cityHeader = $("#destination-info").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchCountryName+ "</h4>");
     }
-     $("container").append(cityHeader);
+     $("#destination-info").append(cityHeader);
  };
    
 function currentWeather (searchCity){
@@ -263,7 +263,8 @@ function currentWeather (searchCity){
           url: queryURL,
           method: "GET"
         }).then(function(response) {
-            
+            console.log("Weather response: ")
+            console.log(response)
             // Convert the temp to fahrenheit
             let tempF = (response.main.temp - 273.15) * 1.80 + 32;
             let roundedTemp = Math.floor(tempF);
@@ -272,12 +273,17 @@ function currentWeather (searchCity){
             //temp elements added to html
             // let tempDataF = $("<p>").text("Temp: " + roundedTemp + "F");
             // let windData = $("<p>").text("Wind: " + response.wind.speed + "mph");
-            // var iconCode = response.weather[0].icon;
-            // var iconUrl = "https://openweathermap.org/img/wn/" + iconCode + ".png";
-            // let weatherImg = $("<img>").attr("src", iconUrl);
+            var iconCode = response.weather[0].icon;
+            var iconUrl = "https://openweathermap.org/img/wn/" + iconCode + ".png";
+            let weatherImg = $("<img>").attr("src", iconUrl);
             //cityData.append(weatherImg, tempDataF, windData );
-            var cityData = "<tr><td>" + response.name + " weather today: T: " + roundedTemp + "F</td><td>W: " + response.wind.speed + "mph</td></tr>";
-            $("#displayWeather").append(cityData);
+            var cityData = "<tr><td>" + response.name + " weather today: " + "T - " + roundedTemp + "F,  W - " + response.wind.speed + "mph</td></tr>";
+            //var cityData = "<p>" + response.name + " weather today: T: " + roundedTemp +  + "F  W: " + response.wind.speed + "mph";
+            console.log(cityData);
+            // cityData.append(weatherImage);
+            $("#destination-info").append(weatherImg);
+
+            $("#destination-info").append(cityData);
 
     }); //function response
 }; //currentWeather
@@ -383,6 +389,8 @@ $(document).ready(function () {
          console.log ("You have selected the kindID - " + searchKindId);
          console.log ("You have selected the kind - " + searchKind);
 
+         currentWeather(searchCity);
+         
          //Display header for the search results based on the parameters entered
          displayCityHeader (searchCity, searchState, searchCountryName, searchKind);
 
@@ -393,7 +401,7 @@ $(document).ready(function () {
          //   console.log (response);
          
          
-        currentWeather(searchCity);
+        
         
          // fiveDayForecast(searchCity);
         // Combine search paremters into an object
