@@ -104,7 +104,7 @@ var api_settings_places = {
 
 /* The collection of objects containing place information returned by the APIs */
 var searchResults = [];
-
+var cityForecast = [];
 
 
 
@@ -139,8 +139,11 @@ function getForecast(a_parameters){
         // Grab relevant data
         var t_return = {
             "lat": response.city.coord.lat,
-            "lon": response.city.coord.lon
+            "lon": response.city.coord.lon,
         }
+        
+        // Get forecast
+        cityForecast = response.list;
 
         // Get places in the area
         getPlaces(t_return);
@@ -214,7 +217,6 @@ function getPlaceInfo(a_placeId){
 
     });
 }
-
 
 
 
@@ -301,6 +303,26 @@ $("#list-item-1").html(response1.name);
 $("#list-desc-1").html(response1.description);
 $("#list-item-2").html(response2.name);
 $("#list-desc-2").html(response2.description);
+     $("container").append(cityHeader);
+    
+
+function displayPlace(a_placeInfo){
+    // Create wrapper div
+    var t_displayDiv = $("<div>");
+
+    // Create the text sections
+    var t_header = $("<h3>").text(a_placeInfo.name);
+    var t_address = $("<span>").text(a_placeInfo.address);
+    var t_link = $("<a>").text(a_placeInfo.placeURL);
+    var t_description = $("<p>").text(a_placeInfo.description);
+
+    // Append to wrapper div
+    t_displayDiv.append(t_header).append(t_address).append(t_link).append(t_description);
+
+    // Append to results div
+    $("results-wrapper").append(t_displayDiv);
+}
+
 // ==================================================
 // EVENT HANDLERS
 // ==================================================
@@ -408,11 +430,10 @@ $(document).ready(function () {
         var t_searchParameters = {"city": searchCity}
         if(searchState != "" && searchState != null && searchState != "Choose..." && searchCountry === "US"){ t_searchParameters["state"] = searchState; }
         if(searchCountry != "" && searchCountry != null){ t_searchParameters["country"] = searchCountry;}
-        console.log("search params for Forecast: " + t_searchParameters);
 
         // Gets the forecast, and calls methods to get places
         getForecast(t_searchParameters);
-        console.log (searchResults);
+        
     });
 
 
