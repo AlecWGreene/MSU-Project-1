@@ -312,13 +312,13 @@ $(document).ready(function () {
             
          }
 
-         //grab the interest/kind that user selected
+         //grab the id of the interest/kind user selected
          if (searchKindId === "") {
             searchKindId = $("#list-kinds li.active").attr("data-target");
             
         }
         
-        // The kinds of places to return
+        // grab the name of the interest/kind user selected
         var searchKind = $("#list-kinds li.active").text();
 
          console.log ("Search button was clicked!");
@@ -344,10 +344,11 @@ $(document).ready(function () {
         var t_searchParameters = {"city": searchCity}
         if(searchState != "" && searchState != null && searchState != "Choose..." && searchCountry === "US"){ t_searchParameters["state"] = searchState; }
         if(searchCountry != "" && searchCountry != null){ t_searchParameters["country"] = searchCountry;}
-        console.log(t_searchParameters);
+        console.log("search params for Forecast: " + t_searchParameters);
 
         // Gets the forecast, and calls methods to get places
         getForecast(t_searchParameters);
+        console.log (searchResults);
     });
     function  displayCityHeader (searchCity, searchState, searchCountryName, searchKind){
         
