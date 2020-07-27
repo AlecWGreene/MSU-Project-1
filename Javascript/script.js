@@ -240,6 +240,20 @@ var response2 = {"name": "Nickels Arcade",
 // Array of search results
 var responseArray = [response1, response2,response1, response2,response1, response2,response1, response2,response1, response2];
 
+ //Display a header for the results based on parameters passed
+ function  displayCityHeader (searchCity, searchState, searchCountryName, searchKind){
+        
+    let cityHeader = ""
+    if (searchCountryName === "USA") {
+        cityHeader = $("#orange").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchState + "</h4>");
+    }else{
+        cityHeader = $("#orange").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchCountryName+ "</h4>");
+    }
+     $("container").append(cityHeader);
+    
+};
+
+
 // ==================================================
 // EVENT HANDLERS
 // ==================================================
@@ -328,6 +342,7 @@ $(document).ready(function () {
          console.log ("You have selected the kindID - " + searchKindId);
          console.log ("You have selected the kind - " + searchKind);
 
+         //Display header for the search results based on the parameters entered
          displayCityHeader (searchCity, searchState, searchCountryName, searchKind);
 
         // handleWeatherRequest("Forecast",{"city": "Tokyo", "country": "JP"})
@@ -350,17 +365,7 @@ $(document).ready(function () {
         getForecast(t_searchParameters);
         console.log (searchResults);
     });
-    function  displayCityHeader (searchCity, searchState, searchCountryName, searchKind){
-        
-        let cityHeader = ""
-        if (searchCountryName === "USA") {
-            cityHeader = $("#orange").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchState + "</h4>");
-        }else{
-            cityHeader = $("#orange").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchCountryName+ "</h4>");
-        }
-         $("container").append(cityHeader);
-        
-    };
+
 
     //Dynamically build dropdown options list for the country
     function setCountry(){
