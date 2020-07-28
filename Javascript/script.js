@@ -145,8 +145,8 @@ function getForecast(a_parameters){
         
         // Get forecast
         cityForecast = response.list;
-        
-        console.log ("Here:" + response.list);
+        displayForecast (cityForecast);  //Alina's call
+        // console.log (cityForecast);
         // Get places in the area
         getPlaces(t_return);
     });
@@ -331,7 +331,73 @@ function currentWeather (searchCity){
 // $("#list-item-2").html(response2.name);
 // $("#list-desc-2").html(response2.description);
 //      $("container").append(cityHeader);
-    
+
+function displayForecast (cityForecast){
+
+    console.log ("city forecast from displayForecast");
+    console.log (cityForecast)
+
+    var iconUrl = "https://openweathermap.org/img/wn/" 
+    var png_suffix = ".png";
+    var wind_suffix = "mph";
+    var temp_suffix = "F";
+
+    $("#destination-info").empty();
+    $("#display-weather").empty();
+
+    // For each day
+    for(let i = 0; i < 5; i++){
+           
+        // Store data in the array
+        forecastArray[i] = {
+            day: moment(cityForecast[8 * i].dt_txt).format("dddd"),  //Tu, Wed, Thursday
+            date: (cityForecast[8 * i].dt_txt).slice(8,10), //date number only
+            dayImage: iconUrl + cityForecast[8 * i + 6].weather[0].icon + png_suffix, //image
+            tempHigh: cityForecast[8 * i + 6 ].main.temp_max + temp_suffix, //max temp at 15:00
+            wind: cityForecast[8 * i + 6].wind.speed + wind_suffix //wind
+        };
+    }//end of for loop for 5 days
+
+    console.log ("forecastArray: ");
+    console.log (forecastArray[0].day,forecastArray[1].day,forecastArray[2].day);
+    console.log (forecastArray[0].date,forecastArray[1].date,forecastArray[2].date);
+    console.log (forecastArray[0].tempHigh,forecastArray[1].tempHigh,forecastArray[2].tempHigh,forecastArray[3].tempHigh,forecastArray[4].tempHigh);
+    console.log (forecastArray[0].dayImage,forecastArray[1].dayImage,forecastArray[2].dayImage);
+    console.log (forecastArray[0].wind,forecastArray[1].wind,forecastArray[2].wind);
+
+    let dispImg = "";
+    let dispTemp = "";
+    let dispWind = "";
+    let dispDate = "";
+    let dispDay = "";
+    let dispCol1 = "";
+    let dispCol2 = "";
+    let dispRow1 = "";
+    let dispRow2 = "";
+    let dispRowfull1 = "";
+    let dispRowfull2 = "";
+
+     // For each days
+    for(let i = 0; i < 5; i++){
+
+        dispImg = $("<img>").attr("src", forecastArray[i].dayImage);
+        dispTemp = forecastArray[i].tempHigh;
+        dispWind = forecastArray[i].wind;
+        dispDate = forecastArray[i].date;
+        dispDay = forecastArray[i].day;
+        dispCol1 = "<td width= 15%>" + dispDay + ", " + dispDate + dispImg + "</td>";
+        dispCol2 = "<td width= 15%>"+ "T: " + dispTemp + " ,W: " + dispWind + "</td>";
+        //dispCol = "<td>" + dispDay + ", " + dispDate + ": " + "T - " + dispTemp + "F,  W - " + dispWind + "</td>";
+        dispRow1 = dispRow1 + dispCol1;
+        dispRow2 = dispRow2 + dispCol2;
+     }
+     dispRowfull1 = "<tr>" + dispRow1 + "</tr>";
+     dispRowfull2 = "<tr>" + dispRow2 + "</tr>";
+     dispRowfull = dispRowfull1 + dispRowfull2;
+     
+     $("#displayWeather").html(dispRowfull);
+        
+}//end of displayForecast
 
 function displayPlace(a_placeInfo){
     // Create wrapper div
