@@ -317,22 +317,6 @@ function currentWeather (searchCity){
     }); //function response
 }; //currentWeather
 
-//$(".city").html("<h1>" + response.name + " Weather</h1>");
-//cityData.append(weatherImg, windData, humidityData, tempData, tempDataF);
-//$("container").append(cityData);
-
-// let item1Group = $(".wrapper").addClass("item-group")
-// var item1Header = $("#list-item-1").html(response1.name);
-// var item1Desc = $("<p>").text(response1.description);
-// item1Group.append(item1Header, item1Desc);
-// $("container").append(item1Text);
-// $("#list-item-1").html(response1.name);
-// $("#list-desc-1").html(response1.description);
-// $("#list-item-2").html(response2.name);
-// $("#list-desc-2").html(response2.description);
-//      $("container").append(cityHeader);
-    
-
 function displayPlace(a_placeInfo){
     // Create wrapper div
     var t_displayDiv = $("<div>");
