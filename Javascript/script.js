@@ -104,6 +104,7 @@ var api_settings_places = {
 
 /* The collection of objects containing place information returned by the APIs */
 var searchResults = [];
+/* The forecast for the search city */
 var cityForecast = [];
 
 
@@ -188,8 +189,6 @@ function getPlaces(a_response){
  * @description Takes an object containing information retrieved from the OpenTripMap Places API and pushes it to searchResults 
  */
 function getPlaceInfo(a_placeId){
-    // Helper variables to return
-    var t_return;
 
     // Base places url
     let t_url = api_url_places;
@@ -213,6 +212,7 @@ function getPlaceInfo(a_placeId){
         // If place has a name
         if(t_info.name != null && t_info.name != ""){
             searchResults.push(t_info);
+            displayPlace(t_info);
         }
 
     });
@@ -312,15 +312,29 @@ function displayPlace(a_placeInfo){
 
     // Create the text sections
     var t_header = $("<h3>").text(a_placeInfo.name);
-    var t_address = $("<span>").text(a_placeInfo.address);
-    var t_link = $("<a>").text(a_placeInfo.placeURL);
+
+    // Create the address section   
+    var t_address = $("<span>");
+    var t_string = "";
+    // Add house name
+    if(a_placeInfo.address["house"]){t_string += a_placeInfo.address["house"]}
+    // Add street number
+    if(a_placeInfo.address["house_number"] && a_placeInfo.address["house"]){ t_string += ", " + a_placeInfo.address["house_number"]}
+    else if(a_placeInfo.address["house_number"]){ t_string += a_placeInfo.address["house_number"]; }
+    // Add the road
+    if(a_placeInfo.address["road"]){ t_string += a_placeInfo.address["road"]; }
+
+    // Add the address text
+    t_address.text(t_string);
+    
+    // Create the description section
     var t_description = $("<p>").text(a_placeInfo.description);
 
     // Append to wrapper div
-    t_displayDiv.append(t_header).append(t_address).append(t_link).append(t_description);
+    t_displayDiv.append(t_header).append(t_address).append(t_description);
 
     // Append to results div
-    $("results-wrapper").append(t_displayDiv);
+    $("#results-wrapper").append(t_displayDiv);
 }
 
 // ==================================================
@@ -416,16 +430,6 @@ $(document).ready(function () {
          //Display header for the search results based on the parameters entered
          displayCityHeader (searchCity, searchState, searchCountryName, searchKind);
 
-        // handleWeatherRequest("Forecast",{"city": "Tokyo", "country": "JP"})
-
-         //   handleWeatherRequest("Weather",{"city": searchCity})
-         //http://api.openweathermap.org/data/2.5/weather?q=Chicago&appid=14dcce84f7b94920cbe9d542aace61ee&units=imperial
-         //   console.log (response);
-         
-         
-        
-        
-         // fiveDayForecast(searchCity);
         // Combine search paremters into an object
         var t_searchParameters = {"city": searchCity}
         if(searchState != "" && searchState != null && searchState != "Choose..." && searchCountry === "US"){ t_searchParameters["state"] = searchState; }
