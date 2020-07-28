@@ -145,7 +145,8 @@ function getForecast(a_parameters){
         
         // Get forecast
         cityForecast = response.list;
-
+        
+        console.log ("Here:" + response.list);
         // Get places in the area
         getPlaces(t_return);
     });
@@ -224,34 +225,60 @@ function getPlaceInfo(a_placeId){
 // ==================================================
 // DISPLAY FUNCTIONS
 // ==================================================
-//Fake result 1
-var response1 = {"name": "Kelsey Museum of Archaeology",
-"imageURL": "https://commons.wikimedia.org/wiki/File:Nickels_Arcade_at_night.jpg",
-"placeURL":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.gSNCdRYeQKULxd5CDPUfmwHaFj%26pid%3DApi&f=1",
-"kinds":"museums,archaeological_museums,cultural,interesting_places,history_museums",
-"description":"Lorem ipsum",
-"conditions": ["hot","cold","rainy","snowy"]}
 
-// Fake result 2
-var response2 = {"name": "Nickels Arcade",
-"imageURL": "https://commons.wikimedia.org/wiki/File:Nickels_Arcade_at_night.jpg",
-"kinds":"historic_architecture,architecture,interesting_places,other_buildings_and_structures",
-"description": "Nickels Arcade is a commercial building located at 326-330 South State Street in Ann Arbor, Michigan. It was listed on the National Register of Historic Places in 1987. The building is notable as perhaps the only remaining example in Michigan of a free-standing commercial arcade building that was popularized by the Cleveland Arcade.",
-"conditions": ["hot","cold","rainy","snowy"]}
-
+var response1 = {
+    "dt": 1595894400,
+    "main": {
+      "temp": 91.9,
+      "feels_like": 91.58,
+      "temp_min": 90.81,
+      "temp_max": 91.9,
+      "pressure": 1007,
+      "sea_level": 1008,
+      "grnd_level": 1007,
+      "humidity": 48,
+      "temp_kf": 0.61
+    },
+    "weather": [
+      {
+        "id": 801,
+        "main": "Clouds",
+        "description": "few clouds",
+        "icon": "02d"
+      }
+    ],
+    "clouds": {
+      "all": 22
+    },
+    "wind": {
+      "speed": 13.58,
+      "deg": 250
+    },
+    "visibility": 10000,
+    "pop": 0,
+    "sys": {
+      "pod": "d"
+    },
+    "dt_txt": "2020-07-28 00:00:00"
+  }
 // Array of search results
-var responseArray = [response1, response2,response1, response2,response1, response2,response1, response2,response1, response2];
+ var forecastArray = [response1, response1,response1, response1,response1, response1,response1, response1,response1, response1];
 
  //Display a header for the results based on parameters passed
  function  displayCityHeader (searchCity, searchState, searchCountryName, searchKind){
         
-    let cityHeader = ""
+    let cityHeader = "";
+    $("#results-header").empty();
     if (searchCountryName === "USA") {
-        cityHeader = $("#destination-info").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchState + "</h4>");
+        if (searchState !=="") {
+            cityHeader = $("#results-header").html("Explore " + searchKind + " in " + searchCity + ", "  + searchState);
+        }else{
+            cityHeader = $("#results-header").html("Explore " + searchKind + " in " + searchCity); 
+        }    
     }else{
-        cityHeader = $("#destination-info").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchCountryName+ "</h4>");
+        cityHeader = $("#results-header").html("Explore " + searchKind + " in " + searchCity + ", "  + searchCountryName);
     }
-     $("#destination-info").append(cityHeader);
+     $("#results-header").append(cityHeader);
  };
    
 function currentWeather (searchCity){
@@ -270,7 +297,7 @@ function currentWeather (searchCity){
             // Convert the temp to fahrenheit
             let tempF = (response.main.temp - 273.15) * 1.80 + 32;
             let roundedTemp = Math.floor(tempF);
-
+            $("#destination-info").empty();
          
             //temp elements added to html
             // let tempDataF = $("<p>").text("Temp: " + roundedTemp + "F");
@@ -311,7 +338,7 @@ function displayPlace(a_placeInfo){
     var t_displayDiv = $("<div>");
 
     // Create the text sections
-    var t_header = $("<h3>").text(a_placeInfo.name);
+    var t_header = $("<h4>").text(a_placeInfo.name);
 
     // Create the address section   
     var t_address = $("<span>");
@@ -425,7 +452,7 @@ $(document).ready(function () {
          console.log ("You have selected the kindID - " + searchKindId);
          console.log ("You have selected the kind - " + searchKind);
 
-         currentWeather(searchCity);
+         //currentWeather(searchCity);
          
          //Display header for the search results based on the parameters entered
          displayCityHeader (searchCity, searchState, searchCountryName, searchKind);
@@ -437,6 +464,7 @@ $(document).ready(function () {
 
         // Gets the forecast, and calls methods to get places
         getForecast(t_searchParameters);
+        //displayForecast(searchCity, searchState, searchCountry); //new code
         
     });
 

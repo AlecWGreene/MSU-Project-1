@@ -1,0 +1,67 @@
+function GetForecast(){
+
+    // Update the forecast url
+    forecast_URL = `http://api.openweathermap.org/data/2.5/forecast?q=${query.name}&appid=${apiKey}`;
+
+    // Ajax call
+    $.ajax({
+        url: forecast_URL + imperial_suffix, 
+        method: "GET"
+    }).then(function(response){ 
+        UpdateForecast(response);
+        DisplayForecast();
+    });
+
+}
+function UpdateForecast(a_query){
+    // For each day
+    for(let i = 0; i < 5; i++){
+            
+        // Init helper vars
+        var t_temp_min;
+        var t_temp_max;
+        var t_humidity_avg = 0;
+
+        // For each 3hour forecast
+        for(let j = 0; j < 8; j++){
+
+            // If temperature is highest
+            if((a_query.list[8 * i + j ].main.temp > t_temp_max) || (i + j) == 0){
+                t_temp_max = a_query.list[8 * i + j ].main.temp;
+            }
+
+            // If temperature is lowest
+            if((a_query.list[8 * i + j ].main.temp < t_temp_min) || (i + j) == 0){
+                t_temp_min = a_query.list[8 * i + j ].main.temp;
+            }
+
+            // Add to humidity
+            t_humidity_avg += a_query.list[8 * i + j ].main.humidity;
+        }
+
+        // Store data in the array
+        forecastArray[i] = {
+            day: moment(a_query.list[8 * i].dt_txt).format("dddd"),
+            conditions: icon_URL + a_query.list[8 * i + 5].weather[0].icon + png_suffix, 
+            tempHigh: t_temp_max, 
+            tempLow: t_temp_min, 
+            humidity: t_humidity_avg / 8
+        };
+    }
+}
+
+function DisplayForecast(){
+
+    // For each days
+    for(let i = 0; i < 5; i++){
+
+        // Display forecastArray[i] members
+        $("#forecast-header-" + (i + 1)).text(forecastArray[i].day);
+        $("#conditions-" + (i + 1)).attr("src", forecastArray[i].conditions);
+        $("#temphi-" + (i + 1)).html("Hi " + forecastArray[i].tempHigh + "\&\#176\;");
+        $("#templo-" + (i + 1)).html("Lo " + forecastArray[i].tempLow + "\&\#176\;");
+        $("#humidity-" + (i + 1)).html(forecastArray[i].humidity + " \&\#37\;");
+
+    }
+
+}
