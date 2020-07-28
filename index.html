@@ -1,0 +1,110 @@
+
+<!-- create accordion
+push up site
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<link rel="stylesheet" href="style.css">
+
+<title>Travel Guide</title>
+</head>
+<body>
+<div class="container" id="main">
+
+  <!-- Travel Row-->
+    <div class="container">
+        <div class="row">
+          <div class="col-md-12" id="green"><h1>Travel Guide</h1></div>
+        </div>
+    </div>
+
+
+     <!-- Form Section-->
+   <div class="container" id="bottom">
+
+    <!-- Weather Row -->
+    <div class="row">
+      <!-- (Weather API 5-day would fill in here) -->
+      <div class="col-md-12" id="orange"><h4>Please select your travel destination and interest in the form below to see the list of attractions. </h4>
+        <div id="display"></div>
+      </div>
+    </div>
+
+      <div class="row">
+          <div class="col-md-4" id="red">
+              <!-- <h2>Form</h2> -->
+              <div class="selection">
+                <div class="input-group mb-3" id="input-group-country">
+                  <div class="input-group-prepend">
+                    <label class="input-group-text" for="input-select-country">Country</label>
+                  </div>
+                  <select class="custom-select" id="input-select-country">
+                    <option selected value="US">USA</option>                
+                  </select>
+                </div>
+                <div class="input-group mb-3" id="input-group-city">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-default">City</span>
+                  </div>
+                  <input type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default" id="input-text-city">
+                </div>
+                <div class="input-group mb-3" id="input-group-state">
+                  <div class="input-group-prepend">
+                    <label class="input-group-text" for="input-select-state">State</label>
+                  </div>
+                  <select class="custom-select" id="input-select-state">
+                    <option selected>Choose...</option>
+                   
+                  </select>
+                </div>
+              <ul class="list-group" id="list-kinds">
+                <li class="list-group-item active" data-target=“natural”>Nature</li>
+                <li class="list-group-item" data-target=“shops”>Shops</li>
+                <li class="list-group-item" data-target=“museums”>Museums</li>
+                <li class="list-group-item" data-target=“theaters_and_entertainments”>Entertainment</li>
+                <li class="list-group-item" data-target=“historic”>History</li>
+                <li class="list-group-item" data-target=“religion”>Religion</li>
+                <li class="list-group-item" data-target=“architecture”>Architecture</li>
+                <li class="list-group-item" data-target=“amusements”>Amusements</li>
+                <li class="list-group-item" data-target=“sports”>Sports</li>
+                <li class="list-group-item" data-target=“food”>Food</li>
+              </ul>
+              <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="search-btn">
+                Search
+              </button>
+                </div>
+          </div>
+
+          <!-- Results Section-->
+          <div class="col-md-8" id="blue">
+                <!-- <h2 id="results">Results</h2> -->
+              <div class="container" id="results-wrapper">
+               
+                
+              </div>
+                <nav aria-label="search-results" class="pagination">
+                  <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
+                  </ul>
+                </nav>
+          </div>
+          </form>
+          
+</body>
+<!-- JQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Custom Javascript -->
+<script src="Javascript/script.js"></script>
+
+</html>
+
