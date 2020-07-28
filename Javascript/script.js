@@ -299,11 +299,11 @@ function currentWeather (searchCity){
 // var item1Desc = $("<p>").text(response1.description);
 // item1Group.append(item1Header, item1Desc);
 // $("container").append(item1Text);
-$("#list-item-1").html(response1.name);
-$("#list-desc-1").html(response1.description);
-$("#list-item-2").html(response2.name);
-$("#list-desc-2").html(response2.description);
-     $("container").append(cityHeader);
+// $("#list-item-1").html(response1.name);
+// $("#list-desc-1").html(response1.description);
+// $("#list-item-2").html(response2.name);
+// $("#list-desc-2").html(response2.description);
+//      $("container").append(cityHeader);
     
 
 function displayPlace(a_placeInfo){
