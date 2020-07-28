@@ -104,6 +104,7 @@ var api_settings_places = {
 
 /* The collection of objects containing place information returned by the APIs */
 var searchResults = [];
+/* The forecast for the search city */
 var cityForecast = [];
 
 
@@ -188,8 +189,6 @@ function getPlaces(a_response){
  * @description Takes an object containing information retrieved from the OpenTripMap Places API and pushes it to searchResults 
  */
 function getPlaceInfo(a_placeId){
-    // Helper variables to return
-    var t_return;
 
     // Base places url
     let t_url = api_url_places;
@@ -213,7 +212,7 @@ function getPlaceInfo(a_placeId){
         // If place has a name
         if(t_info.name != null && t_info.name != ""){
             searchResults.push(t_info);
-            displayPlace(searchResults[searchResults.length - 1]);
+            displayPlace(t_info);
         }
 
     });
@@ -248,9 +247,9 @@ var responseArray = [response1, response2,response1, response2,response1, respon
         
     let cityHeader = ""
     if (searchCountryName === "USA") {
-        cityHeader = $("#orange").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchState + "</h4>");
+        cityHeader = $("#destination-info").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchState + "</h4>");
     }else{
-        cityHeader = $("#orange").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchCountryName+ "</h4>");
+        cityHeader = $("#destination-info").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchCountryName+ "</h4>");
     }
      $("container").append(cityHeader);
     
@@ -264,11 +263,20 @@ function displayPlace(a_placeInfo){
     // Create the text sections
     var t_header = $("<h3>").text(a_placeInfo.name);
 
-    // Create the address section
+    // Create the address section   
     var t_address = $("<span>");
-    var t_string = a_placeInfo.address.house + ", " + a_placeInfo.address.house_number + " " + a_placeInfo.address.road;
-    t_address.text(t_string);
+    var t_string = "";
+    // Add house name
+    if(a_placeInfo.address["house"]){t_string += a_placeInfo.address["house"]}
+    // Add street number
+    if(a_placeInfo.address["house_number"] && a_placeInfo.address["house"]){ t_string += ", " + a_placeInfo.address["house_number"]}
+    else if(a_placeInfo.address["house_number"]){ t_string += a_placeInfo.address["house_number"]; }
+    // Add the road
+    if(a_placeInfo.address["road"]){ t_string += a_placeInfo.address["road"]; }
 
+    // Add the address text
+    t_address.text(t_string);
+    
     // Create the description section
     var t_description = $("<p>").text(a_placeInfo.description);
 
@@ -366,11 +374,11 @@ $(document).ready(function () {
          console.log ("You have selected the country - " + searchCountry);      
          console.log ("You have selected the kindID - " + searchKindId);
          console.log ("You have selected the kind - " + searchKind);
-
+         
          //Display header for the search results based on the parameters entered
          displayCityHeader (searchCity, searchState, searchCountryName, searchKind);
 
-        // Create search parameters
+        // Combine search paremters into an object
         var t_searchParameters = {"city": searchCity}
         if(searchState != "" && searchState != null && searchState != "Choose..." && searchCountry === "US"){ t_searchParameters["state"] = searchState; }
         if(searchCountry != "" && searchCountry != null){ t_searchParameters["country"] = searchCountry;}
