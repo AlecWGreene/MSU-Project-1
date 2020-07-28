@@ -9,344 +9,215 @@
 
 // Form Variables
 // --------------------------------------------------
-const stateNames = [
-    'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut',
-    'Delaware', 'Florida', 'Georgia', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas',
-    'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 
-    'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 
-    'New Mexico', 'New York', 'North Carolina', 'North Dakota', 'Ohio', 'Oklahoma', 'Oregon',
-    'Pennsylvania', 'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 
-    'Vermont', 'Virginia', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'
-  ];
 
-  const countryNames = [
-    'Canada', 'France', 'Germany','other'
+const states = [
+    ['Arizona', 'AZ'],
+    ['Alabama', 'AL'],
+    ['Alaska', 'AK'],
+    ['Arkansas', 'AR'],
+    ['California', 'CA'],
+    ['Colorado', 'CO'],
+    ['Connecticut', 'CT'],
+    ['Delaware', 'DE'],
+    ['Florida', 'FL'],
+    ['Georgia', 'GA'],
+    ['Hawaii', 'HI'],
+    ['Idaho', 'ID'],
+    ['Illinois', 'IL'],
+    ['Indiana', 'IN'],
+    ['Iowa', 'IA'],
+    ['Kansas', 'KS'],
+    ['Kentucky', 'KY'],
+    ['Louisiana', 'LA'],
+    ['Maine', 'ME'],
+    ['Maryland', 'MD'],
+    ['Massachusetts', 'MA'],
+    ['Michigan', 'MI'],
+    ['Minnesota', 'MN'],
+    ['Mississippi', 'MS'],
+    ['Missouri', 'MO'],
+    ['Montana', 'MT'],
+    ['Nebraska', 'NE'],
+    ['Nevada', 'NV'],
+    ['New Hampshire', 'NH'],
+    ['New Jersey', 'NJ'],
+    ['New Mexico', 'NM'],
+    ['New York', 'NY'],
+    ['North Carolina', 'NC'],
+    ['North Dakota', 'ND'],
+    ['Ohio', 'OH'],
+    ['Oklahoma', 'OK'],
+    ['Oregon', 'OR'],
+    ['Pennsylvania', 'PA'],
+    ['Rhode Island', 'RI'],
+    ['South Carolina', 'SC'],
+    ['South Dakota', 'SD'],
+    ['Tennessee', 'TN'],
+    ['Texas', 'TX'],
+    ['Utah', 'UT'],
+    ['Vermont', 'VT'],
+    ['Virginia', 'VA'],
+    ['Washington', 'WA'],
+    ['West Virginia', 'WV'],
+    ['Wisconsin', 'WI'],
+    ['Wyoming', 'WY'],
 ];
 
-// Cache Variables
-// --------------------------------------------------
+  const countryNames = [
+    ['Canada', 'CA'],
+    ['France', 'FR'],
+    ['Germany','DE'],
+    ['Japan',  'JP'],
+];
 
-/** Holds value of API calls */
-var lastPlaceSearch, lastWeatherSearch;
-/** Bools to track Async methods */
-var isSearchingPlaces, isSearchingWeather;
+let searchCountry = "US";
+let searchCountryName = "USA";
+let searchState = "";
+let searchCity = "";
+let searchKindId = "";
+
+
 
 
 // ==================================================
-// AJAX CALLERS
+// GLOBAL VARIABLES
 // ==================================================
 
-// OpenTripMap Places API
+// Search Variables
 // --------------------------------------------------
 
-/**
- * @class
- * 
- * @classdesc The class representation of a place retrieved by the OpenTripMap Places API
- * 
- * @property {string} name The name of the place
- * 
- * @property {string} imageURL The url linking to an image of the place
- * 
- * @property {placeURL} placeURL The url linking to a website for the place
- * 
- * @property {string} description An exerpt from the wikipedia page
- * 
- * @property {Array<string>} conditions The weather conditions to show this place for
- * 
- * @method processObjectId Takes a number representing the xid and makes an API call to retrieve and return the chosen attributes of the place
- */
-class Places_Place{
-    /**
-     * @constructor
-     * 
-     * @param {Number} a_response The xid of the place
-     */
-    constructor(a_response){
-        // Store the information in the instance
-        this.name = a_response.name;
-        this.imageURL = a_response.imageURL;
-        this.placeURL = a_response.placeURL;
-        this.description = a_response.description;
-        this.kinds = a_response.kinds;
-        this.conditions = a_response.conditions;
-    }
-}
-
-/**
- * @function handlePlacesRequest
- * 
- * @description A function to handle callls to the OpenTripMap Places API
- * 
- * Enumerated below are the requests and their specific parameters:
- * 
- * "PlacesByBBox" : required{"lonMin", "lonMax", "latMin", "latMax"}, optional{"kinds", "rate", "format", "limit"}; 
- * 
- * "PlacesByRadius" : required{"lat","lon"}, optional{"kinds","format","rate","limit"};
- * 
- * "Coordinates" : required{"name"}, optional{"country"};
- * 
- * "PlaceInfo" : required{"placeId"}
- * 
- * @param {string} a_request one of: "PlacesByBBox", "PlacesByRadius", "Coordinates", "PlaceInfo"
- * 
- * @param {Object} a_parameters A object whose properties are members to pass to the API
- * 
- * @todo Fix kinds parameters
- */
-function handlePlacesRequest(a_request, a_parameters){
-    // Search is running
-    isSearchingPlaces = true;
-
-    /** The base url for the API */
-    var url = "https://opentripmap-places-v1.p.rapidapi.com/en/places/";
-
-    /** the settings for Ajax */
-    var settings = {
+/* Base url for OpenTripMap Places API */
+var api_url_places = "https://opentripmap-places-v1.p.rapidapi.com/en/places/";
+/* Base url for openWeather 5-day Forecast API */
+var api_url_weather = "http://api.openweathermap.org/data/2.5/forecast\?";
+/* The settings to pass to the Ajax handler for the OpenTripMap Places API */
+var api_settings_places = {
         "async": true,
         "crossDomain": true,
-        "url": url,
+        "url": "",
         "method" : "GET",
         "headers": {
             "x-rapidapi-host": "opentripmap-places-v1.p.rapidapi.com",
             "x-rapidapi-key" : "1e3ad4ad08msh37dbc7f86166d8ap13837fjsncab8be83f428"
         }
     }
+
+/* The collection of objects containing place information returned by the APIs */
+var searchResults = [];
+var cityForecast = [];
+
+
+
+
+// ==================================================
+// AJAX CALLERS
+// ==================================================
+
+/**
+ * @function getForecast 
+ * 
+ * @param {Object} a_parameters An object with properties City, State, Country
+ * 
+ * @description Gets the forecast for the passed city information and calls @see getPlaces
+ */
+function getForecast(a_parameters){
     
-    // Depending on the passed request type
-    switch(a_request){
-        // CASE: Get places by bounding box
-        case "PlacesByBBox": 
-            // Append command to url
-            url += "bbox?format=json";
-
-            // Add optional parameters
-            if(a_parameters["kinds"]){ url += "&kinds=" + a_parameters.kinds; }
-            if(a_parameters["rate"]){ url += "&rate=" + a_parameters.rate; }
-            if(a_parameters["limit"]){ url += "&limit=" + a_parameters.limit; }
-
-            // Verify required parameters
-            if(a_parameters["lon_min"] 
-               && a_parameters["lon_max"] 
-               && a_parameters["lat_min"] 
-               && a_parameters["lat_max"]){
-                // Add parameters to url
-                url += "&lon_min=" + a_parameters.lon_min 
-                    + "&lon_max=" + a_parameters.lon_max 
-                    + "&lat_min=" + a_parameters.lat_min
-                    + "&lat_max=" + a_parameters.lat_max;
-            }
-            else{
-                // Console log error
-                console.log("ERROR: Parameters give to Places API Handler for request: " + a_request + " was not paired with correct parameters: " + JSON.stringify(a_parameters));
-            }
-
-            break;
-        // CASE: Get places by location and radius
-        case "PlacesByRadius": 
-            // Append command to url
-            url += "radius?format=json";
-
-            // Add optional parameters
-            if(a_parameters["kinds"]){ url += "&kinds=" + a_parameters.kinds; }
-            if(a_parameters["rate"]){ url += "&rate=" + a_parameters.rate; }
-            if(a_parameters["limit"]){ url += "&limit=" + a_parameters.limit; }
-
-
-            // Verify required parameters
-            if(a_parameters["lat"] && a_parameters["lon"] && a_parameters["radius"]){
-                // Add parameters to url
-                url += "&radius=" + a_parameters.radius + "&lat=" + a_parameters.lat + "&lon=" + a_parameters.lon;
-            }
-            else{
-                // Console log error
-                console.log("ERROR: Parameters give to Places API Handler for request: " + a_request + " was not paired with correct parameters: " + JSON.stringify(a_parameters));
-            }
-            break;
-        // CASE: Get coordinates
-        case "Coordinates": 
-            // Append command to url
-            url += "geoname?format=json";
-
-            // Add optional parameters
-            if(a_parameters["country"]){ url += "&country=" + a_parameters.country; }
-
-            // Verify required parameters
-            if(a_parameters["name"]){ url += "&name=" + a_parameters.name; }
-            else{
-                // Console log error
-                console.log("ERROR: Parameters give to Places API Handler for request: " + a_request + " was not paired with correct parameters: " + a_parameters);
-            }
-            break;
-        // CASE: Get place information
-        case "PlaceInfo": 
-            // Append command to url
-            url += "xid/";
-
-            // Verify required parameters
-            if(a_parameters["placeId"]){ url += a_parameters.placeId; }
-            else{
-                // Console log error
-                console.log("ERROR: Parameters give to Places API Handler for request: " + a_request + " was not paired with correct parameters: " + a_parameters);
-            }
-            break;
-        // DEFAULT: A valid request was not passed
-        default:
-            // Console log error
-            console.log("ERROR: Request to Places API Handler was not a valid commend: " + a_request);
-            return;
-    }
-
-    // Update settings URL
-    settings.url = url;
-
-    // Return API response
-    var t_response = null;
-    $.ajax(settings).done(function(a_response){
-        console.log(a_response);
-        
-        // If the request was for place info
-        if(a_request === "PlaceInfo"){
-            lastPlaceSearch = new Places_Place(a_response);
+    // The base weather url 
+    let t_url = api_url_weather;
+  
+    // Add query to url
+    t_url += "q=" + a_parameters.city;
+  
+    // Add API Key and units parameter
+    t_url += "&appid=14dcce84f7b94920cbe9d542aace61ee&units=imperial";
+  
+    // Make Ajax call to openWeather
+    $.ajax({
+        "url": t_url,
+        "method": "GET"
+    }).then(function(response){
+        // Grab relevant data
+        var t_return = {
+            "lat": response.city.coord.lat,
+            "lon": response.city.coord.lon,
         }
-
-        // Search over
-        isSearchingPlaces = false;
-    })
-}
-
-async function searchLocation(a_parameters){
-    // Create parameter object
-    var t_params = {
-        "limit": 20
-    }
-
-    // Call Places Ajax handler
-    handlePlacesRequest("PlacesByRadius", );
-
-    // Wait for Ajax call to finish
-    await !isSearchingPlaces;
-}
-
-
-
-// OpenWeather API
-// --------------------------------------------------
-
-/**
- * @class
- * 
- * @classdesc An object representing the weather data for a city
- * 
- * @property {string} name The city name
- * 
- * @property {number} temp The temperature in Fahrenheit
- * 
- * @property {number} wind The wind speed
- * 
- * @property {number} UVIndex The UV Index
- * 
- * @property {number} time The last time the weather was updated
- * 
- * @property {CityForecast} forecast The 5 day forecast for the city
- */
-class CityWeather{
-    /**
-     * @constructor
-     * 
-     * @param {Object} a_response The parameters to construct the object, typically a response to the OpenWeather 5-day forecast API
-     */
-    constructor(a_response){
-        // Store city name
-        this.name = a_response.city.name;
         
-        // The coordinates of the area
-        this.coordinates = {"lat": a_response.city.coord.lat, "lon": a_response.city.coord.lon}
+        // Get forecast
+        cityForecast = response.list;
 
-        // The forecast of the area
-        this.forecast = [];
-
-        // For each of the 5 days
-        for(let i = 0; i < 5; i++){
-            // Initialize the ith array
-            this.forecast[i] = [];
-
-            // For each forecast
-            for(let j = 0; j < 8; j++){
-                // Store an object of data at i,j in forecast
-                this.forecast[i][j] = {
-                    "time": a_response.list[8 * i + j].dt_txt,
-                    "temp": a_response.list[8 * i + j].main.temp,
-                    "wind": a_response.list[8 * i + j].wind.speed,
-                    "conditions": a_response.list[8 * i + j].weather[0].description,
-                    "conditionsIcon": a_response.list[8 * i + j].weather[0].icon
-                }
-            }
-        }
-    }
-}
-
-/**
- * @function handleWeatherRequest
- * 
- * @description Handles requests to the OpenWeather API 
- * 
- * @param {string} a_request one of: "Weather", "Forecast"
- * 
- * @param {Object} a_parameters An object whose properties are parameters to pass to the API
- * 
- * @returns {Response}
- */
-function handleWeatherRequest(a_request, a_parameters){
-    /** URL for the OpenWeather API */
-    var url = "http://api.openweathermap.org/data/2.5/";
-
-    /** The settings for the Ajax call */
-    var settings = {"method": "GET", "url": url}
-
-    // Handle request types
-    switch(a_request){
-        // CASE: Get the current weather 
-        case "Weather":
-            // Append method call to url
-            url += "weather\?";
-            break;
-        // CASE: Get the forecast for the next 5 days
-        case "Forecast":
-            // Append method call to url
-            url += "forecast\?";
-            break;
-        // CASE: Request was not valid
-        default:
-            console.log("ERROR: The request passed to OpenWeather was not valid:" + a_request);
-            return;
-    }
-
-    // Verify required parameters
-    if(a_parameters["city"]){ url += "q=" + a_parameters.city; }
-    else{
-        console.log("ERROR: The request passed to OpenWeather " + a_request + "was passed invalid parameters: " + a_parameters);
-    }
-
-    // Handle optional parameters
-    if(a_parameters["state"]){ url += "," + a_parameters.state; }
-    if(a_parameters["country"]){ url += "," + a_parameters.country; }
-
-    // Append API Key to the url
-    url += "&appid=14dcce84f7b94920cbe9d542aace61ee&units=imperial";
-
-    // Update URL
-    settings.url = url;
-    console.log(url);
-
-    // Make Ajax call
-    var t_return;
-    $.ajax(settings).then(function(response){
-        console.log(response);
-        var t_cityWeather = new CityWeather(response);
-        console.log(t_cityWeather);
+        // Get places in the area
+        getPlaces(t_return);
     });
 }
+
+/**
+ * @function getPlaces
+ * 
+ * @param {Response} a_response A response from the OpenTripMap Places method GetPlacesByRadius
+ * 
+ * @description Takes a response from the API and calls @see getPlaceInfo on each feature returned
+ */
+function getPlaces(a_response){
+
+    // Base places url
+    let t_url = api_url_places;
+
+    // Add parameters to url
+    t_url += "radius?radius=500";
+    t_url += "&lon=" + a_response.lon + "&lat=" + a_response.lat;
+
+    // Update url in settings
+    api_settings_places.url = t_url;
+    
+    // Make Ajax call to OpenTripMap Places 
+    $.ajax(api_settings_places).then(function(a_response2){
+
+        // For each returned place
+        for(let i = 0; i < a_response2.features.length; i++){
+            // Store place info
+            getPlaceInfo(a_response2.features[i].properties.xid);
+        }
+    });
+}
+
+/**
+ * @function getPlaceInfo
+ * 
+ * @param {String} a_placeId The xid of the place
+ * 
+ * @description Takes an object containing information retrieved from the OpenTripMap Places API and pushes it to searchResults 
+ */
+function getPlaceInfo(a_placeId){
+    // Helper variables to return
+    var t_return;
+
+    // Base places url
+    let t_url = api_url_places;
+    
+    // Add parameters to url
+    t_url += "xid/" + a_placeId;
+
+    // Update settings 
+    api_settings_places.url = t_url;
+
+    // Make Ajax call to OpenTripMap Places
+    $.ajax(api_settings_places).then(function(a_response){
+
+        // Get relevant properties from a_response
+        var t_info ={"name": a_response.name, "kinds": a_response.kinds }  
+
+        // Get possible properties
+        if(a_response["address"]){ t_info["address"] = a_response["address"]; }
+        if(a_response["wikipedia_extracts"]){ t_info["description"] = a_response["wikipedia_extracts"].text; }
+
+        // If place has a name
+        if(t_info.name != null && t_info.name != ""){
+            searchResults.push(t_info);
+        }
+
+    });
+}
+
 
 
 
@@ -371,6 +242,37 @@ var response2 = {"name": "Nickels Arcade",
 // Array of search results
 var responseArray = [response1, response2,response1, response2,response1, response2,response1, response2,response1, response2];
 
+ //Display a header for the results based on parameters passed
+ function  displayCityHeader (searchCity, searchState, searchCountryName, searchKind){
+        
+    let cityHeader = ""
+    if (searchCountryName === "USA") {
+        cityHeader = $("#orange").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchState + "</h4>");
+    }else{
+        cityHeader = $("#orange").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchCountryName+ "</h4>");
+    }
+     $("container").append(cityHeader);
+    
+}
+
+
+function displayPlace(a_placeInfo){
+    // Create wrapper div
+    var t_displayDiv = $("<div>");
+
+    // Create the text sections
+    var t_header = $("<h3>").text(a_placeInfo.name);
+    var t_address = $("<span>").text(a_placeInfo.address);
+    var t_link = $("<a>").text(a_placeInfo.placeURL);
+    var t_description = $("<p>").text(a_placeInfo.description);
+
+    // Append to wrapper div
+    t_displayDiv.append(t_header).append(t_address).append(t_link).append(t_description);
+
+    // Append to results div
+    $("results-wrapper").append(t_displayDiv);
+}
+
 // ==================================================
 // EVENT HANDLERS
 // ==================================================
@@ -381,44 +283,128 @@ var responseArray = [response1, response2,response1, response2,response1, respon
 // ==================================================
 $(document).ready(function () {
    
+    //Dynamically build dropdown options list for countries
     setCountry();
+
+    //Dynamically build dropdown options list for the states
     setStates();
-
-    let searchCountry = "USA";
-
-    //grab search country from the select country dropdown box
+ 
+    //If user updated country, grab the country from the select country dropdown box
     $("#input-select-country").change(function(){
         searchCountry = $(this).find("option:selected").val(); 
+        searchCountryName = $(this).find("option:selected").text();
         console.log ("You have selected the country - " + searchCountry);
-        if (searchCountry !== "USA") {
+        if (searchCountry !== "US") {
             $ ("#input-group-state").hide();
-            searchState = "";
+            $ ("#input-group-state").val('')
         }else{
             $ ("#input-group-state").show() 
+
         }
         
     });
 
-    //Set Country
+    //If user selected state, grab the state from the select state dropdown box
+    $("#input-select-state").change(function(){  
+        let searchState = $(this).find("option:selected").val();   
+        let searchStateName = $(this).find("option:selected").text();   
+        console.log ("Name:" + searchStateName) 
+        console.log ("Value:" + searchState)  
+    });    
+
+    //If user clicks on interest (kind), then select this list-group item
+      $('.list-group-item').click(function(e) {
+         e.preventDefault();
+         $(this).addClass('active').siblings().removeClass('active');        
+            searchKindId = $(this).attr("data-target");
+            console.log("ActiveID selected before search: " + searchKindId);
+     });
+
+    //Deliver API search parameters when SEARCH button is clicked
+    $("#search-btn").click(function (event) {
+        event.preventDefault();
+
+        // Clear search results
+        searchResults = [];
+
+         //grab search country from the select country dropdown box
+         let searchCountry = $("#input-select-country").val().trim();
+
+         //grab search state from the select state dropdown box
+         let searchState = $("#input-select-state").val().trim();       
+
+         if (searchCountry !== "US") {
+             searchState = ""
+             $ ("#input-group-state").val('')
+         }
+
+        //grab search city from input field
+         let searchCity = $("#input-text-city").val().trim();
+         if (searchCity === ''){
+            alert('City can not be left blank');  //remove
+            
+         }
+
+         //grab the id of the interest/kind user selected
+         if (searchKindId === "") {
+            searchKindId = $("#list-kinds li.active").attr("data-target");
+            
+        }
+        
+        // grab the name of the interest/kind user selected
+        var searchKind = $("#list-kinds li.active").text();
+
+         console.log ("Search button was clicked!");
+         console.log ("You have entered the city name - " + searchCity);
+         console.log ("You have selected the state - " + searchState);
+         console.log ("You have selected the country - " + searchCountry);      
+         console.log ("You have selected the kindID - " + searchKindId);
+         console.log ("You have selected the kind - " + searchKind);
+
+         //Display header for the search results based on the parameters entered
+         displayCityHeader (searchCity, searchState, searchCountryName, searchKind);
+
+        // handleWeatherRequest("Forecast",{"city": "Tokyo", "country": "JP"})
+
+         //   handleWeatherRequest("Weather",{"city": searchCity})
+         //http://api.openweathermap.org/data/2.5/weather?q=Chicago&appid=14dcce84f7b94920cbe9d542aace61ee&units=imperial
+         //   console.log (response);
+         
+         
+            // currentWeather(searchCity);
+        
+         // fiveDayForecast(searchCity);
+        // Combine search paremters into an object
+        var t_searchParameters = {"city": searchCity}
+        if(searchState != "" && searchState != null && searchState != "Choose..." && searchCountry === "US"){ t_searchParameters["state"] = searchState; }
+        if(searchCountry != "" && searchCountry != null){ t_searchParameters["country"] = searchCountry;}
+
+        // Gets the forecast, and calls methods to get places
+        getForecast(t_searchParameters);
+        
+    });
+
+
+    //Dynamically build dropdown options list for the country
     function setCountry(){
         let selectCountry = document.getElementById("input-select-country");
         for (var i = 0; i < countryNames.length; i++) {
             var option = document.createElement("option");
-            option.text = countryNames[i];
-            option.value = countryNames[i];
+            option.text = countryNames[i][0];
+            option.value = countryNames[i][1];
             selectCountry.add(option);
         }   
     }
 
-    //Set States
+    //Dynamically build dropdown options list for the US States
     function setStates(){
         
 	    selectState = document.getElementById("input-select-state");
 	    
-	    for (var i = 0; i < stateNames.length; i++) {
-            var option = document.createElement("option");
-            option.text = stateNames[i];
-            option.value = stateNames[i];
+	    for (var i = 0; i < states.length; i++) {
+            var option = document.createElement("option");           
+            option.text = states[i][0];
+            option.value = states[i][1];          
             selectState.add(option);
         }   
     }

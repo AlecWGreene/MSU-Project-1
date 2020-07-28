@@ -13,7 +13,7 @@ add marging and seperate results from forms on mobile view
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
 <link rel="stylesheet" href="Styles/style.css">
 
-  <title>Document</title>
+<title>Travel Guide</title>
 </head>
 <body>
 <div class="container" id="main">
@@ -21,7 +21,7 @@ add marging and seperate results from forms on mobile view
   <!-- Travel Row-->
     <div class="container">
         <div class="row">
-          <div class="col-md-12" id="green"><h1>Travel Planner</h1></div>
+          <div class="col-md-12" id="green"><h1>Travel Guide</h1></div>
         </div>
     </div>
 
@@ -31,7 +31,8 @@ add marging and seperate results from forms on mobile view
 
     <!-- Weather Row -->
     <div class="row">
-      <div class="col-md-12" id="orange"><h1>(Weather API 5-day would fill in here) </h1>
+      <!-- (Weather API 5-day would fill in here) -->
+      <div class="col-md-12" id="orange"><h4>Please select your travel destination and interest in the form below to see the list of attractions. </h4>
         <div id="display"></div>
       </div>
     </div>
@@ -45,7 +46,7 @@ add marging and seperate results from forms on mobile view
                     <label class="input-group-text" for="input-select-country">Country</label>
                   </div>
                   <select class="custom-select" id="input-select-country">
-                    <option selected value="USA">USA</option>                
+                    <option selected value="US">USA</option>                
                   </select>
                 </div>
                 <div class="input-group mb-3" id="input-group-city">
@@ -68,7 +69,7 @@ add marging and seperate results from forms on mobile view
                 <li class="list-group-item" data-target=“shops”>Shops</li>
                 <li class="list-group-item" data-target=“museums”>Museums</li>
                 <li class="list-group-item" data-target=“theaters_and_entertainments”>Entertainment</li>
-                <li class="list-group-item" data-target=“historic”>Historical</li>
+                <li class="list-group-item" data-target=“historic”>History</li>
                 <li class="list-group-item" data-target=“religion”>Religion</li>
                 <li class="list-group-item" data-target=“architecture”>Architecture</li>
                 <li class="list-group-item" data-target=“amusements”>Amusements</li>
@@ -76,7 +77,7 @@ add marging and seperate results from forms on mobile view
                 <li class="list-group-item" data-target=“food”>Food</li>
               </ul>
               <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" id="search-btn">
-                Submit
+                Search
               </button>
                 </div>
           </div>
@@ -84,87 +85,10 @@ add marging and seperate results from forms on mobile view
           <!-- Results Section-->
           <div class="col-md-8" id="blue">
                 <!-- <h2 id="results">Results</h2> -->
-                <div class="container" id="purple">
+              <div class="container" id="results-wrapper">
                
                 
-
-                  <!-- <div class="w-full md:w-3/5 mx-auto p-8">
-                    <p>Open <strong>one</strong></p>
-                    <div class="shadow-md">
-                       <div class="tab w-full overflow-hidden border-t">
-                          <input class="absolute opacity-0" id="tab-single-one" type="radio" name="tabs2">
-                          <label class="block p-5 leading-normal cursor-pointer" for="tab-single-one">list-item-1</label>
-                          <div class="tab-content overflow-hidden border-l-2 bg-gray-100 border-indigo-500 leading-normal">
-                             <p class="p-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, architecto, explicabo perferendis nostrum, maxime impedit atque odit sunt pariatur illo obcaecati soluta molestias iure facere dolorum adipisci eum? Saepe, itaque.</p>
-                          </div>
-                       </div>
-                       <div class="tab w-full overflow-hidden border-t">
-                          <input class="absolute opacity-0" id="tab-single-two" type="radio" name="tabs2">
-                          <label class="block p-5 leading-normal cursor-pointer" for="tab-single-two">list-item-2</label>
-                          <div class="tab-content overflow-hidden border-l-2 bg-gray-100 border-indigo-500 leading-normal">
-                             <p class="p-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, architecto, explicabo perferendis nostrum, maxime impedit atque odit sunt pariatur illo obcaecati soluta molestias iure facere dolorum adipisci eum? Saepe, itaque.</p>
-                          </div>
-                       </div>
-
-                       <div class="tab w-full overflow-hidden border-t">
-                          <input class="absolute opacity-0" id="tab-single-three" type="radio" name="tabs2">
-                          <label class="block p-5 leading-normal cursor-pointer" for="tab-single-three">Label Three</label>
-                          <div class="tab-content overflow-hidden border-l-2 bg-gray-100 border-indigo-500 leading-normal">
-                             <p class="p-5">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Tenetur, architecto, explicabo perferendis nostrum, maxime impedit atque odit sunt pariatur illo obcaecati soluta molestias iure facere dolorum adipisci eum? Saepe, itaque.</p>
-                          </div>
-                       </div>
-
-                    </div>
-                 </div> -->
-
-
-
-                  <div class="scrollable">
-                    <div data-spy="scroll" data-target="#list-example" data-offset="0" class="scrollspy-example">
-                      <div class="wrapper">
-                      <h4 id="list-item-1">Item 1</h4>
-                      <p>Ex consequat commodo adipisicing exercitation aute excepteur occaecat ullamco duis aliqua id magna ullamco eu. Do aute ipsum ipsum ullamco cillum consectetur ut et aute consectetur labore. Fugiat laborum incididunt tempor eu consequat enim dolore proident. Qui laborum do non excepteur nulla magna eiusmod consectetur in. Aliqua et aliqua officia quis et incididunt voluptate non anim reprehenderit adipisicing dolore ut consequat deserunt mollit dolore. Aliquip nulla enim veniam non fugiat id cupidatat nulla elit cupidatat commodo velit ut eiusmod cupidatat elit dolore.</p>
-                    </div>
-                    <div class="wrapper">
-                      <h4 id="list-item-2">Item 2</h4>
-                      <p>Ex consequat commodo adipisicing exercitation aute excepteur occaecat ullamco duis aliqua id magna ullamco eu. Do aute ipsum ipsum ullamco cillum consectetur ut et aute consectetur labore. Fugiat laborum incididunt tempor eu consequat enim dolore proident. Qui laborum do non excepteur nulla magna eiusmod consectetur in. Aliqua et aliqua officia quis et incididunt voluptate non anim reprehenderit adipisicing dolore ut consequat deserunt mollit dolore. Aliquip nulla enim veniam non fugiat id cupidatat nulla elit cupidatat commodo velit ut eiusmod cupidatat elit dolore.</p>
-                    </div>
-                    <div class="wrapper">
-                      <h4 id="list-item-3">Item 3</h4>
-                      <p>Ex consequat commodo adipisicing exercitation aute excepteur occaecat ullamco duis aliqua id magna ullamco eu. Do aute ipsum ipsum ullamco cillum consectetur ut et aute consectetur labore. Fugiat laborum incididunt tempor eu consequat enim dolore proident. Qui laborum do non excepteur nulla magna eiusmod consectetur in. Aliqua et aliqua officia quis et incididunt voluptate non anim reprehenderit adipisicing dolore ut consequat deserunt mollit dolore. Aliquip nulla enim veniam non fugiat id cupidatat nulla elit cupidatat commodo velit ut eiusmod cupidatat elit dolore.</p>
-                    </div>
-                    <div class="wrapper">
-                      <h4 id="list-item-4">Item 4</h4>
-                      <p>Ex consequat commodo adipisicing exercitation aute excepteur occaecat ullamco duis aliqua id magna ullamco eu. Do aute ipsum ipsum ullamco cillum consectetur ut et aute consectetur labore. Fugiat laborum incididunt tempor eu consequat enim dolore proident. Qui laborum do non excepteur nulla magna eiusmod consectetur in. Aliqua et aliqua officia quis et incididunt voluptate non anim reprehenderit adipisicing dolore ut consequat deserunt mollit dolore. Aliquip nulla enim veniam non fugiat id cupidatat nulla elit cupidatat commodo velit ut eiusmod cupidatat elit dolore.</p>
-                    </div>
-                    <div data-spy="scroll" data-target="#list-example" data-offset="0" class="scrollspy-example">
-                      <div class="wrapper">
-                      <h4 id="list-item-5">Item 5</h4>
-                      <p>Ex consequat commodo adipisicing exercitation aute excepteur occaecat ullamco duis aliqua id magna ullamco eu. Do aute ipsum ipsum ullamco cillum consectetur ut et aute consectetur labore. Fugiat laborum incididunt tempor eu consequat enim dolore proident. Qui laborum do non excepteur nulla magna eiusmod consectetur in. Aliqua et aliqua officia quis et incididunt voluptate non anim reprehenderit adipisicing dolore ut consequat deserunt mollit dolore. Aliquip nulla enim veniam non fugiat id cupidatat nulla elit cupidatat commodo velit ut eiusmod cupidatat elit dolore.</p>
-                    </div>
-                    <div class="wrapper">
-                      <h4 id="list-item-6">Item 6</h4>
-                      <p>Ex consequat commodo adipisicing exercitation aute excepteur occaecat ullamco duis aliqua id magna ullamco eu. Do aute ipsum ipsum ullamco cillum consectetur ut et aute consectetur labore. Fugiat laborum incididunt tempor eu consequat enim dolore proident. Qui laborum do non excepteur nulla magna eiusmod consectetur in. Aliqua et aliqua officia quis et incididunt voluptate non anim reprehenderit adipisicing dolore ut consequat deserunt mollit dolore. Aliquip nulla enim veniam non fugiat id cupidatat nulla elit cupidatat commodo velit ut eiusmod cupidatat elit dolore.</p>
-                    </div>
-                    <div class="wrapper">
-                      <h4 id="list-item-7">Item 7</h4>
-                      <p>Ex consequat commodo adipisicing exercitation aute excepteur occaecat ullamco duis aliqua id magna ullamco eu. Do aute ipsum ipsum ullamco cillum consectetur ut et aute consectetur labore. Fugiat laborum incididunt tempor eu consequat enim dolore proident. Qui laborum do non excepteur nulla magna eiusmod consectetur in. Aliqua et aliqua officia quis et incididunt voluptate non anim reprehenderit adipisicing dolore ut consequat deserunt mollit dolore. Aliquip nulla enim veniam non fugiat id cupidatat nulla elit cupidatat commodo velit ut eiusmod cupidatat elit dolore.</p>
-                    </div>
-                    <div class="wrapper">
-                      <h4 id="list-item-8">Item 8</h4>
-                      <p>Ex consequat commodo adipisicing exercitation aute excepteur occaecat ullamco duis aliqua id magna ullamco eu. Do aute ipsum ipsum ullamco cillum consectetur ut et aute consectetur labore. Fugiat laborum incididunt tempor eu consequat enim dolore proident. Qui laborum do non excepteur nulla magna eiusmod consectetur in. Aliqua et aliqua officia quis et incididunt voluptate non anim reprehenderit adipisicing dolore ut consequat deserunt mollit dolore. Aliquip nulla enim veniam non fugiat id cupidatat nulla elit cupidatat commodo velit ut eiusmod cupidatat elit dolore.</p>
-                    </div>
-                    <div class="wrapper">
-                      <h4 id="list-item-9">Item 9</h4>
-                      <p>Ex consequat commodo adipisicing exercitation aute excepteur occaecat ullamco duis aliqua id magna ullamco eu. Do aute ipsum ipsum ullamco cillum consectetur ut et aute consectetur labore. Fugiat laborum incididunt tempor eu consequat enim dolore proident. Qui laborum do non excepteur nulla magna eiusmod consectetur in. Aliqua et aliqua officia quis et incididunt voluptate non anim reprehenderit adipisicing dolore ut consequat deserunt mollit dolore. Aliquip nulla enim veniam non fugiat id cupidatat nulla elit cupidatat commodo velit ut eiusmod cupidatat elit dolore.</p>
-                    </div>
-                    <div class="wrapper">
-                      <h4 id="list-item-10">Item 10</h4>
-                      <p>Ex consequat commodo adipisicing exercitation aute excepteur occaecat ullamco duis aliqua id magna ullamco eu. Do aute ipsum ipsum ullamco cillum consectetur ut et aute consectetur labore. Fugiat laborum incididunt tempor eu consequat enim dolore proident. Qui laborum do non excepteur nulla magna eiusmod consectetur in. Aliqua et aliqua officia quis et incididunt voluptate non anim reprehenderit adipisicing dolore ut consequat deserunt mollit dolore. Aliquip nulla enim veniam non fugiat id cupidatat nulla elit cupidatat commodo velit ut eiusmod cupidatat elit dolore.</p>
-                    </div>
-                       </div>
-                  </div>
-                </div>
+              </div>
                 <nav aria-label="search-results" class="pagination">
                   <ul class="pagination">
                     <li class="page-item"><a class="page-link" href="#">Previous</a></li>
@@ -174,7 +98,7 @@ add marging and seperate results from forms on mobile view
                     <li class="page-item"><a class="page-link" href="#">Next</a></li>
                   </ul>
                 </nav>
-            </div>
+          </div>
           </form>
           
 </body>
