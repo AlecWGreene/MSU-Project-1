@@ -138,6 +138,8 @@ function getForecast(a_parameters){
   
     // Make Ajax call to openWeather
     $.ajax({
+        "async": true,
+        "crossDomain": true,
         "url": t_url,
         "method": "GET"
     }).then(function(response){
