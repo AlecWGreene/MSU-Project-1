@@ -310,16 +310,16 @@ function displayForecast (cityForecast){
     $("#destination-info").empty();
     $("#display-weather").empty();
 
-    // For each day of the 
-    for(let i = 0; i < 5; i++){
+    // For each day of the displayed weather
+    for(let i = 0; i < 6; i++){
            
         // Store data in the array
         forecastArray[i] = {
-            day: moment(cityForecast[8 * i].dt_txt).format("dddd"),                     //Tuesday, Wednesday, Thursday
-            date: (cityForecast[8 * i].dt_txt).slice(8,10),                             //date number only
-            dayImage: iconUrl + cityForecast[8 * i + 6].weather[0].icon + png_suffix,   //image
-            tempHigh: cityForecast[8 * i + 6 ].main.temp_max + temp_suffix,             //max temp at 15:00
-            wind: cityForecast[8 * i + 6].wind.speed + wind_suffix                      //wind
+            day: moment(cityForecast[7 * i].dt_txt).format("dddd"),                     //Tuesday, Wednesday, Thursday
+            date: (cityForecast[7 * i].dt_txt).slice(8,10),                             //date number only
+            dayImage: iconUrl + cityForecast[7 * i].weather[0].icon + png_suffix,   //image
+            tempHigh: Math.round(cityForecast[7 * i].main.temp_max) + temp_suffix,     //max temp
+            wind: Math.round(cityForecast[7 * i].wind.speed) + wind_suffix              //wind
         };
     }//end of for loop for 5 days
 
@@ -344,7 +344,7 @@ function displayForecast (cityForecast){
     let dispRowfull2 = "";
 
      // For each of the next 5 days
-    for(let i = 0; i < 5; i++){
+    for(let i = 0; i < 6; i++){
 
         //dispImg = $("<img>").attr("src", forecastArray[i].dayImage);
         dispImg = "<img src=" + forecastArray[i].dayImage + ">"         //weather image for the day
@@ -354,8 +354,8 @@ function displayForecast (cityForecast){
         dispWind = forecastArray[i].wind;                               //display wind
         dispDate = forecastArray[i].date;                               //display date number as 'dd' format
         dispDay = forecastArray[i].day;                                 //display day of the week
-        dispCol1 = "<td width= 15%>" + dispDay + ", " + dispDate + dispImg + "</td>";
-        dispCol2 = "<td width= 15%>"+ "T: " + dispTemp + " ,W: " + dispWind + "</td>";
+        dispCol1 = "<td style='width: 17%'>" + dispDay + ", " + dispDate + dispImg + "</td>";
+        dispCol2 = "<td style='width: 17%'>"+ "T: " + dispTemp + " ,W: " + dispWind + "</td>";
         
         dispRow1 = dispRow1 + dispCol1;
         dispRow2 = dispRow2 + dispCol2;
