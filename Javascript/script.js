@@ -353,13 +353,9 @@ function displayForecast (cityForecast){
      dispTable = "<table id='weather-table'>" + dispRowfull + "</table>";
 
      //load weather div with the content
-<<<<<<< HEAD
-     $("#display-weather").html(dispTable);    
-=======
      $("#display-weather").html(dispRowfull); 
      
      
->>>>>>> issue-13
         
 }//end of displayForecast
 
