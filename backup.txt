@@ -73,9 +73,10 @@ const states = [
 let searchCountry = "US";
 let searchCountryName = "USA";
 let searchState = "";
+let searchStateName = "";
 let searchCity = "";
 let searchKindId = "";
-
+var forecastArray = [];
 
 
 

@@ -55,8 +55,9 @@
    
   }
 
-  #displayWeather{
-    width: 100%
+  #display-weather{
+    width: 100%;
+    margin: auto;
   }
   
   .scrollable{
