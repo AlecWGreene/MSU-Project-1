@@ -77,6 +77,7 @@ let searchStateName = "";
 let searchCity = "";
 let searchKindId = "";
 var forecastArray = [];
+var filterConditions = "";
 
 
 
@@ -105,6 +106,7 @@ var api_settings_places = {
 
 /* The collection of objects containing place information returned by the APIs */
 var searchResults = [];
+/* The forecast for the search city */
 var cityForecast = [];
 
 /** Tracks how many accordion tabs have been created */
@@ -195,8 +197,6 @@ function getPlaces(a_response){
  * @description Takes an object containing information retrieved from the OpenTripMap Places API and pushes it to searchResults 
  */
 function getPlaceInfo(a_placeId){
-    // Helper variables to return
-    var t_return;
 
     // Base places url
     let t_url = api_url_places;
@@ -220,6 +220,7 @@ function getPlaceInfo(a_placeId){
         // If place has a name
         if(t_info.name != null && t_info.name != ""){
             searchResults.push(t_info);
+            displayPlace(t_info);
         }
 
     });
@@ -327,6 +328,7 @@ function displayForecast (cityForecast){
     let dispCol2 = "";
     let dispRow1 = "";
     let dispRow2 = "";
+    let dispRow3 = "";
     let dispRowfull1 = "";
     let dispRowfull2 = "";
     let dispTable = "";
@@ -341,21 +343,26 @@ function displayForecast (cityForecast){
         dispDate = forecastArray[i].date;                               //display date number as 'dd' format
         dispDay = forecastArray[i].day;                                 //display day of the week
         dispCol1 = "<td class='w-td'>" + dispImg + dispDay + ", " + dispDate +  "</td>";
-        dispCol2 = "<td class='w-td'>"+ "T: " + dispTemp + ", W: " + dispWind + "</td>";
+        dispCol2 = "<td class='w-td'>"+ "Temp: " + dispTemp + "</td>";
+        dispCol3 = "<td class='w-td'>" + "Wind: " + dispWind + "</td>";
         
         dispRow1 = dispRow1 + dispCol1;
         dispRow2 = dispRow2 + dispCol2;
+        dispRow3 = dispRow3 + dispCol3;
      }//end of for loop
 
      dispRowfull1 = "<tr>" + dispRow1 + "</tr>"; //assemble row 1
      dispRowfull2 = "<tr>" + dispRow2 + "</tr>"; //assemble row 2
-     dispRowfull = dispRowfull1 + dispRowfull2;  //assemble content
+     dispRowfull3 = "<tr>" + dispRow3 + "</tr>"; //assemble row 3
+     dispRowfull = dispRowfull1 + dispRowfull2 + dispRowfull3;  //assemble content
      dispTable = "<table id='weather-table'>" + dispRowfull + "</table>";
 
      //load weather div with the content
      $("#display-weather").html(dispRowfull); 
      
-     
+     $("td").on("click",function(){
+
+     });
         
 }//end of displayForecast
 
@@ -455,6 +462,24 @@ function displayErrorModal(a_error,a_message){
 // EVENT HANDLERS
 // ==================================================
 
+/**
+ * 
+ * 
+ */
+function handleCollapseButtonClick(a_event){
+    a_event.preventDefault();
+    // Store icon svgs
+    var collapse_icon = "<svg width='100\%' height='1em' viewBox='0 0 16 16' class='bi bi-arrows-collapse' fill='currentColor' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' d='M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8zm6-7a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V1.5A.5.5 0 0 1 8 1z'/><path fill-rule='evenodd' d='M10.354 3.646a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L8 5.293l1.646-1.647a.5.5 0 0 1 .708 0zM8 15a.5.5 0 0 0 .5-.5V10a.5.5 0 0 0-1 0v4.5a.5.5 0 0 0 .5.5z'/><path fill-rule='evenodd' d='M10.354 12.354a.5.5 0 0 0 0-.708l-2-2a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0 .708.708L8 10.707l1.646 1.647a.5.5 0 0 0 .708 0z'/></svg>";
+    var expand_icon = "<svg width='100\%' height='1em' viewBox='0 0 16 16' class='bi bi-arrows-expand' fill='currentColor' xmlns='http://www.w3.org/2000/svg'/><path fill-rule='evenodd' d='M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8zm6-1.5a.5.5 0 0 0 .5-.5V1.5a.5.5 0 0 0-1 0V6a.5.5 0 0 0 .5.5z'/><path fill-rule='evenodd' d='M10.354 3.854a.5.5 0 0 0 0-.708l-2-2a.5.5 0 0 0-.708 0l-2 2a.5.5 0 1 0 .708.708L8 2.207l1.646 1.647a.5.5 0 0 0 .708 0zM8 9.5a.5.5 0 0 1 .5.5v4.5a.5.5 0 0 1-1 0V10a.5.5 0 0 1 .5-.5z'/><path fill-rule='evenodd' d='M10.354 12.146a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L8 13.793l1.646-1.647a.5.5 0 0 1 .708 0z'/></svg>";
+    
+    // Toggle icons
+    if($(this).hasClass("collapsed") === true){
+        $(a_event.target).html(collapse_icon);
+    }
+    else if($(this).hasClass("collapsed") === false){
+        $(a_event.target).html(expand_icon);
+    }
+}
 
 // ==================================================
 // RUNTIME
@@ -547,16 +572,6 @@ $(document).ready(function () {
          //Display header for the search results based on the parameters entered
          displayCityHeader (searchCity, searchState, searchCountryName, searchKind);
 
-        // handleWeatherRequest("Forecast",{"city": "Tokyo", "country": "JP"})
-
-         //   handleWeatherRequest("Weather",{"city": searchCity})
-         //http://api.openweathermap.org/data/2.5/weather?q=Chicago&appid=14dcce84f7b94920cbe9d542aace61ee&units=imperial
-         //   console.log (response);
-         
-         
-            // currentWeather(searchCity);
-        
-         // fiveDayForecast(searchCity);
         // Combine search paremters into an object
         var t_searchParameters = {"city": searchCity}
         if(searchState != "" && searchState != null && searchState != "Choose..." && searchCountry === "US"){ t_searchParameters["state"] = searchState; }
@@ -593,5 +608,7 @@ $(document).ready(function () {
             selectState.add(option);
         }   
     }
+
+    $(".collapse-button").on("click",handleCollapseButtonClick);
 
 })
