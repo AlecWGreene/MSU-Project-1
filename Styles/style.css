@@ -124,13 +124,13 @@
     }
     /* :checked - resize to full height */
     .tab input:checked ~ .tab-content {
-    max-height: 100vh;
+    max-height: 2rem;
     }
     /* Label formatting when open */
     .tab input:checked + label{
     /*@apply text-xl p-5 border-l-2 border-indigo-500 bg-gray-100 text-indigo*/
     font-size: 1.25rem; /*.text-xl*/
-    padding: 1.25rem; /*.p-5*/
+    padding: 0.25rem!important; /*.p-5*/
     border-left-width: 2px; /*.border-l-2*/
     border-color: #6574cd; /*.border-indigo*/
     background-color: #f8fafc; /*.bg-gray-100 */
@@ -176,3 +176,4 @@
     transform: rotateX(180deg);
     background-color: #6574cd; /*.bg-indigo*/
     color: #f8fafc; /*.text-grey-lightest*/
+  }
