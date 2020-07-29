@@ -105,11 +105,12 @@ var api_settings_places = {
 
 /* The collection of objects containing place information returned by the APIs */
 var searchResults = [];
-/* The forecast for the search city */
 var cityForecast = [];
 
-
-
+/** Tracks how many accordion tabs have been created */
+var numberTabs = 0;
+/** Currently selected results tab */
+var checkedTab = null;
 
 // ==================================================
 // AJAX CALLERS
@@ -168,8 +169,9 @@ function getPlaces(a_response){
     let t_url = api_url_places;
 
     // Add parameters to url
-    t_url += "radius?radius=500";
+    t_url += "radius?kinds=" + searchKindId + "&radius=5000";
     t_url += "&lon=" + a_response.lon + "&lat=" + a_response.lat;
+    console.log(t_url);
 
     // Update url in settings
     api_settings_places.url = t_url;
@@ -193,6 +195,8 @@ function getPlaces(a_response){
  * @description Takes an object containing information retrieved from the OpenTripMap Places API and pushes it to searchResults 
  */
 function getPlaceInfo(a_placeId){
+    // Helper variables to return
+    var t_return;
 
     // Base places url
     let t_url = api_url_places;
@@ -216,7 +220,6 @@ function getPlaceInfo(a_placeId){
         // If place has a name
         if(t_info.name != null && t_info.name != ""){
             searchResults.push(t_info);
-            displayPlace(t_info);
         }
 
     });
@@ -226,8 +229,7 @@ function getPlaceInfo(a_placeId){
 // DISPLAY FUNCTIONS
 // ==================================================
 
-
-//Display a header for the results based on parameters passed
+ //Display a header for the results based on parameters passed
  function  displayCityHeader (searchCity, searchState, searchCountryName, searchKind){
         
     let cityHeader = "";
@@ -261,6 +263,42 @@ function getPlaceInfo(a_placeId){
 
  };
    
+function currentWeather (searchCity){
+
+        var APIKey = "b842e13062ebcdc52faeb1014bc3a489";
+        let queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + searchCity + "&appid=" + APIKey;
+        console.log("Weather Query: " + queryURL);
+
+        //ajax call for local weather
+        $.ajax({
+          url: queryURL,
+          method: "GET"
+        }).then(function(response) {
+            console.log("Weather response: ")
+            console.log(response)
+            // Convert the temp to fahrenheit
+            let tempF = (response.main.temp - 273.15) * 1.80 + 32;
+            let roundedTemp = Math.floor(tempF);
+            $("#destination-info").empty();
+         
+            //temp elements added to html
+            // let tempDataF = $("<p>").text("Temp: " + roundedTemp + "F");
+            // let windData = $("<p>").text("Wind: " + response.wind.speed + "mph");
+            var iconCode = response.weather[0].icon;
+            var iconUrl = "https://openweathermap.org/img/wn/" + iconCode + ".png";
+            let weatherImg = $("<img>").attr("src", iconUrl);
+            //cityData.append(weatherImg, tempDataF, windData );
+            var cityData = "<tr><td>" + response.name + " weather today: " + "T - " + roundedTemp + "F,  W - " + response.wind.speed + "mph</td></tr>";
+            //var cityData = "<p>" + response.name + " weather today: T: " + roundedTemp +  + "F  W: " + response.wind.speed + "mph";
+            console.log(cityData);
+            // cityData.append(weatherImage);
+            $("#destination-info").append(weatherImg);
+
+            $("#destination-info").append(cityData);
+
+    }); //function response
+}; //currentWeather
+
 //Function to display 5 day weather forecast
 function displayForecast (cityForecast){
 
@@ -332,17 +370,34 @@ function displayForecast (cityForecast){
      dispTable = "<table id='weather-table'>" + dispRowfull + "</table>";
 
      //load weather div with the content
-     $("#display-weather").html(dispTable);    
+     $("#display-weather").html(dispRowfull); 
+     
+     
         
 }//end of displayForecast
 
-//
+/**
+ * @function displayPlace
+ * 
+ * @param {Object} a_placeInfo An object with the properties relating to information retrieved through the API
+ * 
+ * @description Display an object with the place info
+ */
 function displayPlace(a_placeInfo){
-    // Create wrapper div
-    var t_displayDiv = $("<div>");
+    // Increment tabs counter
+    numberTabs++;
 
-    // Create the text sections
-    var t_header = $("<h4>").text(a_placeInfo.name);
+    // Create wrapper div
+    var t_displayDiv = $("<div>").addClass("tab w-full overflow-hidden border-t");
+
+    // Create the toggler
+    var t_button = $("<input>").addClass("absolute opacity-0").attr("id","tab-single-" + numberTabs).attr("type","radio").attr("name","results-button");
+
+    // Create the header section
+    var t_header = $("<label>").text(a_placeInfo.name).addClass("block leading-normal cursor-pointer mb-0").attr("for","tab-single-" + numberTabs);
+
+    // Create body div
+    var t_bodyDiv = $("<div>").addClass("tab-content overflow-hidden leading-normal scrollable");
 
     // Create the address section   
     var t_address = $("<span>");
@@ -362,10 +417,55 @@ function displayPlace(a_placeInfo){
     var t_description = $("<p>").text(a_placeInfo.description);
 
     // Append to wrapper div
-    t_displayDiv.append(t_header).append(t_address).append(t_description);
+    t_bodyDiv.append(t_address).append(t_description);
+    t_displayDiv.append(t_button).append(t_header).append(t_bodyDiv);
 
     // Append to results div
     $("#results-wrapper").append(t_displayDiv);
+
+    // Add click listener to button
+    $(t_button).on("click",function(){
+        if(this != checkedTab){
+            checkedTab = this;
+            this.checked = true;
+        }
+        else{
+            this.checked = false;
+            checkedTab = null;
+        }
+    });
+}
+
+/**
+ * @function displayErrorModal
+ * 
+ * @param {String} a_error The type of error that occured
+ * 
+ * @param {String} a_message A message informing the user the details of the error
+ * 
+ * @description Displays a modal informing the user an error occured
+ */
+function displayErrorModal(a_error,a_message){
+    // Create wrapper div
+    var t_modalDiv = $("<div>").addClass("error-modal");
+
+    // Create header div
+    var t_headerDiv = $("<div>").addClass("modal-header");
+    var t_header = $("<h2>").addClass("modal-header-text").text("ERROR: " + a_error);
+    t_headerDiv.append(t_header);
+
+    // Create body div
+    var t_bodyDiv = $("<div>").addClass("modal-body").append($("<p>").text(a_message));
+
+    // Assemble modal
+    t_modalDiv.append(t_headerDiv).append(t_bodyDiv);
+
+    $(t_modalDiv).on("click",function(){
+        $(t_modalDiv).remove();
+    });
+
+    // Append modal to body
+    $(document.body).append(t_modalDiv);
 }
 
 // ==================================================
@@ -419,8 +519,13 @@ $(document).ready(function () {
     $("#search-btn").click(function (event) {
         event.preventDefault();
 
+
+
         // Clear search results
         searchResults = [];
+
+        // Clear search div
+        $("#results-wrapper").empty();
 
          //grab search country from the select country dropdown box
          let searchCountry = $("#input-select-country").val().trim();
@@ -436,14 +541,12 @@ $(document).ready(function () {
         //grab search city from input field
          let searchCity = $("#input-text-city").val().trim();
          if (searchCity === ''){
-            alert('City can not be left blank');  //remove
-            
+            displayErrorModal("Invalid Search Parameters","Please enter a city name"); 
          }
 
          //grab the id of the interest/kind user selected
          if (searchKindId === "") {
-            searchKindId = $("#list-kinds li.active").attr("data-target");
-            
+            searchKindId = $("#list-kinds li.active").attr("data-target");  
         }
         
         // grab the name of the interest/kind user selected
@@ -461,6 +564,16 @@ $(document).ready(function () {
          //Display header for the search results based on the parameters entered
          displayCityHeader (searchCity, searchState, searchCountryName, searchKind);
 
+        // handleWeatherRequest("Forecast",{"city": "Tokyo", "country": "JP"})
+
+         //   handleWeatherRequest("Weather",{"city": searchCity})
+         //http://api.openweathermap.org/data/2.5/weather?q=Chicago&appid=14dcce84f7b94920cbe9d542aace61ee&units=imperial
+         //   console.log (response);
+         
+         
+            // currentWeather(searchCity);
+        
+         // fiveDayForecast(searchCity);
         // Combine search paremters into an object
         var t_searchParameters = {"city": searchCity}
         if(searchState != "" && searchState != null && searchState != "Choose..." && searchCountry === "US"){ t_searchParameters["state"] = searchState; }
@@ -469,6 +582,8 @@ $(document).ready(function () {
         // Gets the forecast, and calls methods to get places
         getForecast(t_searchParameters);
         
+        // If no results found in 5 seconds, display error
+        setTimeout(function(){ if(searchResults.length === 0){ displayErrorModal("No Results Found","The search did not return any places, please enter different parameters and search again."); } },3000);
     });
 
 
@@ -495,4 +610,5 @@ $(document).ready(function () {
             selectState.add(option);
         }   
     }
+
 })
