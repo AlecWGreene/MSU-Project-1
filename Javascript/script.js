@@ -170,8 +170,9 @@ function getPlaces(a_response){
     let t_url = api_url_places;
 
     // Add parameters to url
-    t_url += "radius?radius=500";
+    t_url += "radius?kinds=" + searchKindId + "&radius=5000";
     t_url += "&lon=" + a_response.lon + "&lat=" + a_response.lat;
+    console.log(t_url);
 
     // Update url in settings
     api_settings_places.url = t_url;
@@ -371,7 +372,11 @@ function displayForecast (cityForecast){
         
 }//end of displayForecast
 
-//
+/**
+ * 
+ * 
+ * 
+ */
 function displayPlace(a_placeInfo){
     // Increment tabs counter
     numberTabs++;
@@ -436,7 +441,7 @@ function displayPlace(a_placeInfo){
  */
 function displayErrorModal(a_error,a_message){
     // Create wrapper div
-    var t_modalDiv = $("<div>").addClass("modal");
+    var t_modalDiv = $("<div>").addClass("error-modal");
 
     // Create header div
     var t_headerDiv = $("<div>").addClass("modal-header");
@@ -448,6 +453,10 @@ function displayErrorModal(a_error,a_message){
 
     // Assemble modal
     t_modalDiv.append(t_headerDiv).append(t_bodyDiv);
+
+    $(t_modalDiv).on("click",function(){
+        $(t_modalDiv).remove();
+    });
 
     // Append modal to body
     $(document.body).append(t_modalDiv);
