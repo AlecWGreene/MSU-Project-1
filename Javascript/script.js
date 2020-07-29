@@ -145,8 +145,10 @@ function getForecast(a_parameters){
         
         // Get forecast
         cityForecast = response.list;
-        displayForecast (cityForecast);  //Alina's call
-        // console.log (cityForecast);
+
+        //Display weather forecast
+        displayForecast (cityForecast);  
+        
         // Get places in the area
         getPlaces(t_return);
     });
@@ -219,52 +221,12 @@ function getPlaceInfo(a_placeId){
     });
 }
 
-
-
-
 // ==================================================
 // DISPLAY FUNCTIONS
 // ==================================================
 
-var response1 = {
-    "dt": 1595894400,
-    "main": {
-      "temp": 91.9,
-      "feels_like": 91.58,
-      "temp_min": 90.81,
-      "temp_max": 91.9,
-      "pressure": 1007,
-      "sea_level": 1008,
-      "grnd_level": 1007,
-      "humidity": 48,
-      "temp_kf": 0.61
-    },
-    "weather": [
-      {
-        "id": 801,
-        "main": "Clouds",
-        "description": "few clouds",
-        "icon": "02d"
-      }
-    ],
-    "clouds": {
-      "all": 22
-    },
-    "wind": {
-      "speed": 13.58,
-      "deg": 250
-    },
-    "visibility": 10000,
-    "pop": 0,
-    "sys": {
-      "pod": "d"
-    },
-    "dt_txt": "2020-07-28 00:00:00"
-  }
-// Array of search results
- var forecastArray = [response1, response1,response1, response1,response1, response1,response1, response1,response1, response1];
 
- //Display a header for the results based on parameters passed
+//Display a header for the results based on parameters passed
  function  displayCityHeader (searchCity, searchState, searchCountryName, searchKind){
         
     let cityHeader = "";
@@ -332,6 +294,7 @@ function currentWeather (searchCity){
 // $("#list-desc-2").html(response2.description);
 //      $("container").append(cityHeader);
 
+//Function to display 5 day weather forecast
 function displayForecast (cityForecast){
 
     console.log ("city forecast from displayForecast");
@@ -342,19 +305,20 @@ function displayForecast (cityForecast){
     var wind_suffix = "mph";
     var temp_suffix = "F";
 
+    //Empty the div holders
     $("#destination-info").empty();
     $("#display-weather").empty();
 
-    // For each day
+    // For each day of the 
     for(let i = 0; i < 5; i++){
            
         // Store data in the array
         forecastArray[i] = {
-            day: moment(cityForecast[8 * i].dt_txt).format("dddd"),  //Tu, Wed, Thursday
-            date: (cityForecast[8 * i].dt_txt).slice(8,10), //date number only
-            dayImage: iconUrl + cityForecast[8 * i + 6].weather[0].icon + png_suffix, //image
-            tempHigh: cityForecast[8 * i + 6 ].main.temp_max + temp_suffix, //max temp at 15:00
-            wind: cityForecast[8 * i + 6].wind.speed + wind_suffix //wind
+            day: moment(cityForecast[8 * i].dt_txt).format("dddd"),                     //Tuesday, Wednesday, Thursday
+            date: (cityForecast[8 * i].dt_txt).slice(8,10),                             //date number only
+            dayImage: iconUrl + cityForecast[8 * i + 6].weather[0].icon + png_suffix,   //image
+            tempHigh: cityForecast[8 * i + 6 ].main.temp_max + temp_suffix,             //max temp at 15:00
+            wind: cityForecast[8 * i + 6].wind.speed + wind_suffix                      //wind
         };
     }//end of for loop for 5 days
 
@@ -365,7 +329,8 @@ function displayForecast (cityForecast){
     console.log (forecastArray[0].dayImage,forecastArray[1].dayImage,forecastArray[2].dayImage);
     console.log (forecastArray[0].wind,forecastArray[1].wind,forecastArray[2].wind);
 
-    let dispImg = "";
+    //let dispImg = "";
+    var dispImg
     let dispTemp = "";
     let dispWind = "";
     let dispDate = "";
@@ -377,28 +342,34 @@ function displayForecast (cityForecast){
     let dispRowfull1 = "";
     let dispRowfull2 = "";
 
-     // For each days
+     // For each of the next 5 days
     for(let i = 0; i < 5; i++){
 
-        dispImg = $("<img>").attr("src", forecastArray[i].dayImage);
-        dispTemp = forecastArray[i].tempHigh;
-        dispWind = forecastArray[i].wind;
-        dispDate = forecastArray[i].date;
-        dispDay = forecastArray[i].day;
+        //dispImg = $("<img>").attr("src", forecastArray[i].dayImage);
+        dispImg = "<img src=" + forecastArray[i].dayImage + ">"         //weather image for the day
+        console.log ("disp Image")
+        console.log (dispImg)
+        dispTemp = forecastArray[i].tempHigh;                           //display temp
+        dispWind = forecastArray[i].wind;                               //display wind
+        dispDate = forecastArray[i].date;                               //display date number as 'dd' format
+        dispDay = forecastArray[i].day;                                 //display day of the week
         dispCol1 = "<td width= 15%>" + dispDay + ", " + dispDate + dispImg + "</td>";
         dispCol2 = "<td width= 15%>"+ "T: " + dispTemp + " ,W: " + dispWind + "</td>";
-        //dispCol = "<td>" + dispDay + ", " + dispDate + ": " + "T - " + dispTemp + "F,  W - " + dispWind + "</td>";
+        
         dispRow1 = dispRow1 + dispCol1;
         dispRow2 = dispRow2 + dispCol2;
-     }
-     dispRowfull1 = "<tr>" + dispRow1 + "</tr>";
-     dispRowfull2 = "<tr>" + dispRow2 + "</tr>";
-     dispRowfull = dispRowfull1 + dispRowfull2;
-     
-     $("#displayWeather").html(dispRowfull);
+     }//end of for loop
+
+     dispRowfull1 = "<tr>" + dispRow1 + "</tr>"; //assemble row 1
+     dispRowfull2 = "<tr>" + dispRow2 + "</tr>"; //assemble row 2
+     dispRowfull = dispRowfull1 + dispRowfull2;  //assemble content
+   
+     //load weather div with the content
+     $("#display-weather").html(dispRowfull);    
         
 }//end of displayForecast
 
+//
 function displayPlace(a_placeInfo){
     // Create wrapper div
     var t_displayDiv = $("<div>");
@@ -530,7 +501,6 @@ $(document).ready(function () {
 
         // Gets the forecast, and calls methods to get places
         getForecast(t_searchParameters);
-        //displayForecast(searchCity, searchState, searchCountry); //new code
         
     });
 
