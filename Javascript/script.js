@@ -375,7 +375,7 @@ function displayForecast (cityForecast){
      dispTable = "<table id='weather-table'>" + dispRowfull + "</table>";
 
      //load weather div with the content
-     $("#display-weather").html(dispRowfull); 
+     $("#display-weather").html(dispTable); 
      
      $("td").on("click",function(){
 
