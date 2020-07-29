@@ -373,8 +373,11 @@ function displayForecast (cityForecast){
 }//end of displayForecast
 
 /**
+ * @function displayPlace
  * 
+ * @param {Object} a_placeInfo An object with the properties relating to information retrieved through the API
  * 
+ * @description Display an object with the place info
  * 
  */
 function displayPlace(a_placeInfo){
