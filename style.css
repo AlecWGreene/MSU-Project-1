@@ -55,7 +55,10 @@
    
   }
 
-
+  #displayWeather{
+    width: 100%
+  }
+  
   .scrollable{
     height: 600px; /* or any value */
     overflow-y: auto;
