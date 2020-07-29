@@ -91,7 +91,7 @@ var filterConditions = "";
 /* Base url for OpenTripMap Places API */
 var api_url_places = "https://opentripmap-places-v1.p.rapidapi.com/en/places/";
 /* Base url for openWeather 5-day Forecast API */
-var api_url_weather = "http://api.openweathermap.org/data/2.5/forecast\?";
+var api_url_weather = "https://api.openweathermap.org/data/2.5/forecast\?";
 /* The settings to pass to the Ajax handler for the OpenTripMap Places API */
 var api_settings_places = {
         "async": true,
