@@ -107,7 +107,8 @@ var searchResults = [];
 /* The forecast for the search city */
 var cityForecast = [];
 
-
+/** Tracks how many accordion tabs have been created */
+var numberTabs = 0;
 
 
 // ==================================================
@@ -226,44 +227,6 @@ function getPlaceInfo(a_placeId){
 // DISPLAY FUNCTIONS
 // ==================================================
 
-var response1 = {
-    "dt": 1595894400,
-    "main": {
-      "temp": 91.9,
-      "feels_like": 91.58,
-      "temp_min": 90.81,
-      "temp_max": 91.9,
-      "pressure": 1007,
-      "sea_level": 1008,
-      "grnd_level": 1007,
-      "humidity": 48,
-      "temp_kf": 0.61
-    },
-    "weather": [
-      {
-        "id": 801,
-        "main": "Clouds",
-        "description": "few clouds",
-        "icon": "02d"
-      }
-    ],
-    "clouds": {
-      "all": 22
-    },
-    "wind": {
-      "speed": 13.58,
-      "deg": 250
-    },
-    "visibility": 10000,
-    "pop": 0,
-    "sys": {
-      "pod": "d"
-    },
-    "dt_txt": "2020-07-28 00:00:00"
-  }
-// Array of search results
- var forecastArray = [response1, response1,response1, response1,response1, response1,response1, response1,response1, response1];
-
  //Display a header for the results based on parameters passed
  function  displayCityHeader (searchCity, searchState, searchCountryName, searchKind){
         
@@ -318,11 +281,20 @@ function currentWeather (searchCity){
 }; //currentWeather
 
 function displayPlace(a_placeInfo){
-    // Create wrapper div
-    var t_displayDiv = $("<div>");
+    // Increment tabs counter
+    numberTabs++;
 
-    // Create the text sections
-    var t_header = $("<h4>").text(a_placeInfo.name);
+    // Create wrapper div
+    var t_displayDiv = $("<div>").addClass("tab w-full overflow-hidden border-t");
+
+    // Create the toggler
+    var t_button = $("<input>").addClass("absolute opacity-0").attr("id","tab-single-" + numberTabs).attr("type","radio");
+
+    // Create the header section
+    var t_header = $("<label>").text(a_placeInfo.name).addClass("block p-5 leading-normal cursor-pointer").attr("for","tab-single-" + numberTabs);
+
+    // Create body div
+    var t_bodyDiv = $("<div>").addClass("tab-content overflow-hidden leading-normal");
 
     // Create the address section   
     var t_address = $("<span>");
@@ -342,10 +314,14 @@ function displayPlace(a_placeInfo){
     var t_description = $("<p>").text(a_placeInfo.description);
 
     // Append to wrapper div
-    t_displayDiv.append(t_header).append(t_address).append(t_description);
+    t_bodyDiv.append(t_address).append(t_description);
+    t_displayDiv.append(t_button).append(t_header).append(t_bodyDiv);
 
     // Append to results div
     $("#results-wrapper").append(t_displayDiv);
+
+    // Add click listener to button
+    //$(t_button).on("click",handleAccordionToggle);
 }
 
 // ==================================================
@@ -476,4 +452,5 @@ $(document).ready(function () {
             selectState.add(option);
         }   
     }
+
 })
