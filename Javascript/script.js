@@ -282,21 +282,6 @@ function currentWeather (searchCity){
     }); //function response
 }; //currentWeather
 
-//$(".city").html("<h1>" + response.name + " Weather</h1>");
-//cityData.append(weatherImg, windData, humidityData, tempData, tempDataF);
-//$("container").append(cityData);
-
-// let item1Group = $(".wrapper").addClass("item-group")
-// var item1Header = $("#list-item-1").html(response1.name);
-// var item1Desc = $("<p>").text(response1.description);
-// item1Group.append(item1Header, item1Desc);
-// $("container").append(item1Text);
-// $("#list-item-1").html(response1.name);
-// $("#list-desc-1").html(response1.description);
-// $("#list-item-2").html(response2.name);
-// $("#list-desc-2").html(response2.description);
-//      $("container").append(cityHeader);
-
 //Function to display 5 day weather forecast
 function displayForecast (cityForecast){
 
@@ -368,14 +353,22 @@ function displayForecast (cityForecast){
      dispTable = "<table id='weather-table'>" + dispRowfull + "</table>";
 
      //load weather div with the content
+<<<<<<< HEAD
      $("#display-weather").html(dispTable);    
+=======
+     $("#display-weather").html(dispRowfull); 
+     
+     
+>>>>>>> issue-13
         
 }//end of displayForecast
 
 /**
+ * @function displayPlace
  * 
+ * @param {Object} a_placeInfo An object with the properties relating to information retrieved through the API
  * 
- * 
+ * @description Display an object with the place info
  */
 function displayPlace(a_placeInfo){
     // Increment tabs counter
@@ -566,6 +559,8 @@ $(document).ready(function () {
         // Gets the forecast, and calls methods to get places
         getForecast(t_searchParameters);
         
+        // If no results found in 5 seconds, display error
+        setTimeout(function(){ if(searchResults.length === 0){ displayErrorModal("No Results Found","The search did not return any places, please enter different parameters and search again."); } },3000);
     });
 
 
