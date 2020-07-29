@@ -110,7 +110,8 @@ var cityForecast = [];
 
 /** Tracks how many accordion tabs have been created */
 var numberTabs = 0;
-
+/** Currently selected results tab */
+var checkedTab = null;
 
 // ==================================================
 // AJAX CALLERS
@@ -379,10 +380,10 @@ function displayPlace(a_placeInfo){
     var t_displayDiv = $("<div>").addClass("tab w-full overflow-hidden border-t");
 
     // Create the toggler
-    var t_button = $("<input>").addClass("absolute opacity-0").attr("id","tab-single-" + numberTabs).attr("type","radio");
+    var t_button = $("<input>").addClass("absolute opacity-0").attr("id","tab-single-" + numberTabs).attr("type","radio").attr("name","results-button");
 
     // Create the header section
-    var t_header = $("<label>").text(a_placeInfo.name).addClass("block p-5 leading-normal cursor-pointer").attr("for","tab-single-" + numberTabs);
+    var t_header = $("<label>").text(a_placeInfo.name).addClass("block leading-normal cursor-pointer").attr("for","tab-single-" + numberTabs);
 
     // Create body div
     var t_bodyDiv = $("<div>").addClass("tab-content overflow-hidden leading-normal");
@@ -412,7 +413,44 @@ function displayPlace(a_placeInfo){
     $("#results-wrapper").append(t_displayDiv);
 
     // Add click listener to button
-    //$(t_button).on("click",handleAccordionToggle);
+    $(t_button).on("click",function(){
+        if(this != checkedTab){
+            checkedTab = this;
+            this.checked = true;
+        }
+        else{
+            this.checked = false;
+            checkedTab = null;
+        }
+    });
+}
+
+/**
+ * @function displayErrorModal
+ * 
+ * @param {String} a_error The type of error that occured
+ * 
+ * @param {String} a_message A message informing the user the details of the error
+ * 
+ * @description Displays a modal informing the user an error occured
+ */
+function displayErrorModal(a_error,a_message){
+    // Create wrapper div
+    var t_modalDiv = $("<div>").addClass("modal");
+
+    // Create header div
+    var t_headerDiv = $("<div>").addClass("modal-header");
+    var t_header = $("<h2>").addClass("modal-header-text").text("ERROR: " + a_error);
+    t_headerDiv.append(t_header);
+
+    // Create body div
+    var t_bodyDiv = $("<div>").addClass("modal-body").append($("<p>").text(a_message));
+
+    // Assemble modal
+    t_modalDiv.append(t_headerDiv).append(t_bodyDiv);
+
+    // Append modal to body
+    $(document.body).append(t_modalDiv);
 }
 
 // ==================================================
