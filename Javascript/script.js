@@ -172,8 +172,6 @@ function getPlaces(a_response){
     t_url += "radius?radius=500";
     t_url += "&lon=" + a_response.lon + "&lat=" + a_response.lat;
 
-    t_url += "&kinds=" + searchKindId;
-
     // Update url in settings
     api_settings_places.url = t_url;
     
@@ -229,12 +227,7 @@ function getPlaceInfo(a_placeId){
 // DISPLAY FUNCTIONS
 // ==================================================
 
-<<<<<<< HEAD
  //Display a header for the results based on parameters passed
-=======
-
-//Display a header for the results based on parameters passed
->>>>>>> 4a121e5ce72a1b72514a638d854426491fd94d88
  function  displayCityHeader (searchCity, searchState, searchCountryName, searchKind){
         
     let cityHeader = "";
