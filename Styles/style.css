@@ -1,42 +1,74 @@
 .container{
     text-align: center;
     justify-content: center;
-    background-color: aquamarine;
+    background-color: #D3D3D3;
     margin-top: 50px;
+    margin-right: 0px;
+    border-radius: 30px 30px 30px 30px;
+    width: 100%;
+   max-width: 100%;
+  }
+
+  tr {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  
+  }
+ 
+  td {
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+  }
+
+ 
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+  }
+
+  #green{
+    background-color:	#87CEFA;
+    border-radius: 30px 30px 0px 0px;
+     
+  }
+  
+  #red{
+    background-color:#C0C0C0;
+    padding-bottom: 30px;
+    border-radius:0px 0px 0px 30px ;
   }
 
   #main {
       margin-bottom: 50px;
-      padding: 0px 0px 30px 0px;
+      padding: 0px 0px 0px 0px;
+      
      
   }
 
   #orange{
-    background-color:orange;
+    background-color:#DCDCDC;
   }
   
-  #green{
-    background-color:green;
-    
-  }
   
-  #red{
-    background-color:red;
-    padding-bottom: 30px;
-  }
   
   #blue {
-    background-color:blue;
+    background-color:#C0C0C0;
     padding-top: 30px;
+    border-radius:0px 0px 30px 0px ;
   }
 
   .selection {
       margin-top: 10px;
   }
 
-  #results-wrapper {
-    background-color: blueviolet;
+  #purple {
+    background-color: #87CEFA;
     margin: auto;
+    border-radius: 30px;
    
   }
 
@@ -57,14 +89,54 @@
       margin-top: 10px;
   }
 
-  #srch {
-      margin-top: 10px;
-  }
+
 
   #topsearch {
       margin-bottom: 15px;
       margin-top: 5px;
   }
+
+  /* Mobile stuff */
+
+ 
+
+@media (min-width: 576px) { 
+  #red {
+    border-radius: 30px 30px 30px 30px;
+  }
+  
+  #blue {
+  
+    margin-top: 10px;
+    border-radius:30px 30px 30px 30px;
+    padding-bottom: 20px;
+  
+  }
+  .container {
+    width: 100%;
+    margin: 0px 0px 0px 0px;
+  }
+
+ }
+
+
+
+
+ /* end mobile */
+
+.container {
+  
+  border-radius: 30px 30px 30px 30px;
+}
+
+#purple {
+  padding-bottom: 10px;
+}
+
+
+  }
+
+/* End mobile stuff */
 
   /* #results{
     position: relative;
