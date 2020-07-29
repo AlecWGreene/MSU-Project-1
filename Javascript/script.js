@@ -73,9 +73,10 @@ const states = [
 let searchCountry = "US";
 let searchCountryName = "USA";
 let searchState = "";
+let searchStateName = "";
 let searchCity = "";
 let searchKindId = "";
-
+var forecastArray = [];
 
 
 
@@ -146,8 +147,10 @@ function getForecast(a_parameters){
         
         // Get forecast
         cityForecast = response.list;
+
+        //Display weather forecast
+        displayForecast (cityForecast);  
         
-        console.log ("Here:" + response.list);
         // Get places in the area
         getPlaces(t_return);
     });
@@ -220,14 +223,16 @@ function getPlaceInfo(a_placeId){
     });
 }
 
-
-
-
 // ==================================================
 // DISPLAY FUNCTIONS
 // ==================================================
 
+<<<<<<< HEAD
  //Display a header for the results based on parameters passed
+=======
+
+//Display a header for the results based on parameters passed
+>>>>>>> 4a121e5ce72a1b72514a638d854426491fd94d88
  function  displayCityHeader (searchCity, searchState, searchCountryName, searchKind){
         
     let cityHeader = "";
@@ -280,6 +285,97 @@ function currentWeather (searchCity){
     }); //function response
 }; //currentWeather
 
+//$(".city").html("<h1>" + response.name + " Weather</h1>");
+//cityData.append(weatherImg, windData, humidityData, tempData, tempDataF);
+//$("container").append(cityData);
+
+// let item1Group = $(".wrapper").addClass("item-group")
+// var item1Header = $("#list-item-1").html(response1.name);
+// var item1Desc = $("<p>").text(response1.description);
+// item1Group.append(item1Header, item1Desc);
+// $("container").append(item1Text);
+// $("#list-item-1").html(response1.name);
+// $("#list-desc-1").html(response1.description);
+// $("#list-item-2").html(response2.name);
+// $("#list-desc-2").html(response2.description);
+//      $("container").append(cityHeader);
+
+//Function to display 5 day weather forecast
+function displayForecast (cityForecast){
+
+    console.log ("city forecast from displayForecast");
+    console.log (cityForecast)
+
+    var iconUrl = "https://openweathermap.org/img/wn/" 
+    var png_suffix = ".png";
+    var wind_suffix = "mph";
+    var temp_suffix = "F";
+
+    //Empty the div holders
+    $("#destination-info").empty();
+    $("#display-weather").empty();
+
+    // For each day of the 
+    for(let i = 0; i < 5; i++){
+           
+        // Store data in the array
+        forecastArray[i] = {
+            day: moment(cityForecast[8 * i].dt_txt).format("dddd"),                     //Tuesday, Wednesday, Thursday
+            date: (cityForecast[8 * i].dt_txt).slice(8,10),                             //date number only
+            dayImage: iconUrl + cityForecast[8 * i + 6].weather[0].icon + png_suffix,   //image
+            tempHigh: cityForecast[8 * i + 6 ].main.temp_max + temp_suffix,             //max temp at 15:00
+            wind: cityForecast[8 * i + 6].wind.speed + wind_suffix                      //wind
+        };
+    }//end of for loop for 5 days
+
+    console.log ("forecastArray: ");
+    console.log (forecastArray[0].day,forecastArray[1].day,forecastArray[2].day);
+    console.log (forecastArray[0].date,forecastArray[1].date,forecastArray[2].date);
+    console.log (forecastArray[0].tempHigh,forecastArray[1].tempHigh,forecastArray[2].tempHigh,forecastArray[3].tempHigh,forecastArray[4].tempHigh);
+    console.log (forecastArray[0].dayImage,forecastArray[1].dayImage,forecastArray[2].dayImage);
+    console.log (forecastArray[0].wind,forecastArray[1].wind,forecastArray[2].wind);
+
+    //let dispImg = "";
+    var dispImg
+    let dispTemp = "";
+    let dispWind = "";
+    let dispDate = "";
+    let dispDay = "";
+    let dispCol1 = "";
+    let dispCol2 = "";
+    let dispRow1 = "";
+    let dispRow2 = "";
+    let dispRowfull1 = "";
+    let dispRowfull2 = "";
+
+     // For each of the next 5 days
+    for(let i = 0; i < 5; i++){
+
+        //dispImg = $("<img>").attr("src", forecastArray[i].dayImage);
+        dispImg = "<img src=" + forecastArray[i].dayImage + ">"         //weather image for the day
+        console.log ("disp Image")
+        console.log (dispImg)
+        dispTemp = forecastArray[i].tempHigh;                           //display temp
+        dispWind = forecastArray[i].wind;                               //display wind
+        dispDate = forecastArray[i].date;                               //display date number as 'dd' format
+        dispDay = forecastArray[i].day;                                 //display day of the week
+        dispCol1 = "<td width= 15%>" + dispDay + ", " + dispDate + dispImg + "</td>";
+        dispCol2 = "<td width= 15%>"+ "T: " + dispTemp + " ,W: " + dispWind + "</td>";
+        
+        dispRow1 = dispRow1 + dispCol1;
+        dispRow2 = dispRow2 + dispCol2;
+     }//end of for loop
+
+     dispRowfull1 = "<tr>" + dispRow1 + "</tr>"; //assemble row 1
+     dispRowfull2 = "<tr>" + dispRow2 + "</tr>"; //assemble row 2
+     dispRowfull = dispRowfull1 + dispRowfull2;  //assemble content
+   
+     //load weather div with the content
+     $("#display-weather").html(dispRowfull);    
+        
+}//end of displayForecast
+
+//
 function displayPlace(a_placeInfo){
     // Increment tabs counter
     numberTabs++;
@@ -424,7 +520,6 @@ $(document).ready(function () {
 
         // Gets the forecast, and calls methods to get places
         getForecast(t_searchParameters);
-        //displayForecast(searchCity, searchState, searchCountry); //new code
         
     });
 
