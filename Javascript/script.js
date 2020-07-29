@@ -172,6 +172,8 @@ function getPlaces(a_response){
     t_url += "radius?radius=500";
     t_url += "&lon=" + a_response.lon + "&lat=" + a_response.lat;
 
+    t_url += "&kinds=" + searchKindId;
+
     // Update url in settings
     api_settings_places.url = t_url;
     
