@@ -242,59 +242,25 @@ function getPlaceInfo(a_placeId){
         cityHeader = $("#results-header").html("Explore " + searchKind + " in " + searchCity + ", "  + searchCountryName);
     }
      $("#results-header").append(cityHeader);
+
+     console.log ("city header");
+     console.log (cityHeader)
+    let cityInfo = "";
+    $("#destination-info").empty();
+    if (searchCountryName === "USA") {
+        if (searchState !=="") {
+            cityInfo = $("#destination-info").html("Weather forecast in " + searchCity + ", "  + searchState);
+        }else{
+            cityInfo = $("#destination-info").html("Weather forecast in " + searchCity); 
+        }    
+    }else{
+        cityInfo = $("#destination-info").html("Weather forecast in " + searchCity + ", "  + searchCountryName);
+    }
+     $("#destination-info").append(cityInfo);
+     console.log (cityInfo);
+
  };
    
-function currentWeather (searchCity){
-
-        var APIKey = "b842e13062ebcdc52faeb1014bc3a489";
-        let queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + searchCity + "&appid=" + APIKey;
-        console.log("Weather Query: " + queryURL);
-
-        //ajax call for local weather
-        $.ajax({
-          url: queryURL,
-          method: "GET"
-        }).then(function(response) {
-            console.log("Weather response: ")
-            console.log(response)
-            // Convert the temp to fahrenheit
-            let tempF = (response.main.temp - 273.15) * 1.80 + 32;
-            let roundedTemp = Math.floor(tempF);
-            $("#destination-info").empty();
-         
-            //temp elements added to html
-            // let tempDataF = $("<p>").text("Temp: " + roundedTemp + "F");
-            // let windData = $("<p>").text("Wind: " + response.wind.speed + "mph");
-            var iconCode = response.weather[0].icon;
-            var iconUrl = "https://openweathermap.org/img/wn/" + iconCode + ".png";
-            let weatherImg = $("<img>").attr("src", iconUrl);
-            //cityData.append(weatherImg, tempDataF, windData );
-            var cityData = "<tr><td>" + response.name + " weather today: " + "T - " + roundedTemp + "F,  W - " + response.wind.speed + "mph</td></tr>";
-            //var cityData = "<p>" + response.name + " weather today: T: " + roundedTemp +  + "F  W: " + response.wind.speed + "mph";
-            console.log(cityData);
-            // cityData.append(weatherImage);
-            $("#destination-info").append(weatherImg);
-
-            $("#destination-info").append(cityData);
-
-    }); //function response
-}; //currentWeather
-
-//$(".city").html("<h1>" + response.name + " Weather</h1>");
-//cityData.append(weatherImg, windData, humidityData, tempData, tempDataF);
-//$("container").append(cityData);
-
-// let item1Group = $(".wrapper").addClass("item-group")
-// var item1Header = $("#list-item-1").html(response1.name);
-// var item1Desc = $("<p>").text(response1.description);
-// item1Group.append(item1Header, item1Desc);
-// $("container").append(item1Text);
-// $("#list-item-1").html(response1.name);
-// $("#list-desc-1").html(response1.description);
-// $("#list-item-2").html(response2.name);
-// $("#list-desc-2").html(response2.description);
-//      $("container").append(cityHeader);
-
 //Function to display 5 day weather forecast
 function displayForecast (cityForecast){
 
