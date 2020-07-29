@@ -60,7 +60,7 @@
   }
   
   .scrollable{
-    height: 600px; /* or any value */
+    height: max-content; /* or any value */
     overflow-y: auto;
     margin: auto;
   }
@@ -82,6 +82,10 @@
       margin-top: 5px;
   }
 
+  #results-wrapper{
+    height: 600px!important;
+  }
+
   /* #results{
     position: relative;
     overflow-y: scroll;
@@ -97,7 +101,8 @@
     }
     /* :checked - resize to full height */
     .tab input:checked ~ .tab-content {
-    max-height: 2rem;
+    max-height: max-content;
+    background: white;
     }
     /* Label formatting when open */
     .tab input:checked + label{

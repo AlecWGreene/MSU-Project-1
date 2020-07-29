@@ -134,22 +134,3 @@
     background-color: #6574cd; /*.bg-indigo*/
     color: #f8fafc; /*.text-grey-lightest*/
   }
-
-
-
-/* MODAL STYLING */
-
-.error-modal{
-  background-color: purple;
-  height: 200px;
-  width: 360px;
-  box-shadow: black 2px;
-  position: absolute;
-  top: 50%;
-}
-
-.modal-header{}
-
-.modal-header-text{}
-
-.modal-body{}
