@@ -3,10 +3,27 @@
     justify-content: center;
     background-color: #D3D3D3;
     margin-top: 50px;
+    margin-right: 0px;
     border-radius: 30px 30px 30px 30px;
-   
+    width: 100%;
+   max-width: 100%;
+  }
+
+  tr {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  
   }
  
+  td {
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+  }
+
  
 
   body {
@@ -81,19 +98,31 @@
 
   /* Mobile stuff */
 
-  @media screen and (max-width: 768px) {
+ 
 
-#red {
-  border-radius: 30px 30px 30px 30px;
-}
+@media (min-width: 576px) { 
+  #red {
+    border-radius: 30px 30px 30px 30px;
+  }
+  
+  #blue {
+  
+    margin-top: 10px;
+    border-radius:30px 30px 30px 30px;
+    padding-bottom: 20px;
+  
+  }
+  .container {
+    width: 100%;
+    margin: 0px 0px 0px 0px;
+  }
 
-#blue {
+ }
 
-  margin-top: 10px;
-  border-radius:30px 30px 30px 30px;
-  padding-bottom: 20px;
 
-}
+
+
+ /* end mobile */
 
 .container {
   
