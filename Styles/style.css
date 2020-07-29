@@ -121,7 +121,7 @@
   }
 
   .collapse{
-    display: initial;
+    display: initial!important;
   }
 
   .collapse-button{
