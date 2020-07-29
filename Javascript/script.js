@@ -170,8 +170,9 @@ function getPlaces(a_response){
     let t_url = api_url_places;
 
     // Add parameters to url
-    t_url += "radius?radius=500";
+    t_url += "radius?kinds=" + searchKindId + "&radius=5000";
     t_url += "&lon=" + a_response.lon + "&lat=" + a_response.lat;
+    console.log(t_url);
 
     // Update url in settings
     api_settings_places.url = t_url;
@@ -371,7 +372,11 @@ function displayForecast (cityForecast){
         
 }//end of displayForecast
 
-//
+/**
+ * 
+ * 
+ * 
+ */
 function displayPlace(a_placeInfo){
     // Increment tabs counter
     numberTabs++;
@@ -383,10 +388,10 @@ function displayPlace(a_placeInfo){
     var t_button = $("<input>").addClass("absolute opacity-0").attr("id","tab-single-" + numberTabs).attr("type","radio").attr("name","results-button");
 
     // Create the header section
-    var t_header = $("<label>").text(a_placeInfo.name).addClass("block leading-normal cursor-pointer").attr("for","tab-single-" + numberTabs);
+    var t_header = $("<label>").text(a_placeInfo.name).addClass("block leading-normal cursor-pointer mb-0").attr("for","tab-single-" + numberTabs);
 
     // Create body div
-    var t_bodyDiv = $("<div>").addClass("tab-content overflow-hidden leading-normal");
+    var t_bodyDiv = $("<div>").addClass("tab-content overflow-hidden leading-normal scrollable");
 
     // Create the address section   
     var t_address = $("<span>");
@@ -436,7 +441,7 @@ function displayPlace(a_placeInfo){
  */
 function displayErrorModal(a_error,a_message){
     // Create wrapper div
-    var t_modalDiv = $("<div>").addClass("modal");
+    var t_modalDiv = $("<div>").addClass("error-modal");
 
     // Create header div
     var t_headerDiv = $("<div>").addClass("modal-header");
@@ -448,6 +453,10 @@ function displayErrorModal(a_error,a_message){
 
     // Assemble modal
     t_modalDiv.append(t_headerDiv).append(t_bodyDiv);
+
+    $(t_modalDiv).on("click",function(){
+        $(t_modalDiv).remove();
+    });
 
     // Append modal to body
     $(document.body).append(t_modalDiv);
@@ -504,8 +513,13 @@ $(document).ready(function () {
     $("#search-btn").click(function (event) {
         event.preventDefault();
 
+
+
         // Clear search results
         searchResults = [];
+
+        // Clear search div
+        $("#results-wrapper").empty();
 
          //grab search country from the select country dropdown box
          let searchCountry = $("#input-select-country").val().trim();
@@ -521,14 +535,12 @@ $(document).ready(function () {
         //grab search city from input field
          let searchCity = $("#input-text-city").val().trim();
          if (searchCity === ''){
-            alert('City can not be left blank');  //remove
-            
+            displayErrorModal("Invalid Search Parameters","Please enter a city name"); 
          }
 
          //grab the id of the interest/kind user selected
          if (searchKindId === "") {
-            searchKindId = $("#list-kinds li.active").attr("data-target");
-            
+            searchKindId = $("#list-kinds li.active").attr("data-target");  
         }
         
         // grab the name of the interest/kind user selected
