@@ -55,7 +55,21 @@
    
   }
 
-
+  #display-weather{
+    width: 100%;
+    margin: auto;
+  }
+  #weather-table{
+    margin: auto;
+    font-size: 0.9rem;
+    width: 100%;
+    min-width: 400px;
+    
+  }
+  .w-td{
+    text-align: left;
+    justify-content: left;
+  }
   .scrollable{
     height: 600px; /* or any value */
     overflow-y: auto;

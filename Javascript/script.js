@@ -73,9 +73,11 @@ const states = [
 let searchCountry = "US";
 let searchCountryName = "USA";
 let searchState = "";
+let searchStateName = "";
 let searchCity = "";
 let searchKindId = "";
-
+var forecastArray = [];
+var filterConditions = "";
 
 
 
@@ -107,8 +109,10 @@ var searchResults = [];
 /* The forecast for the search city */
 var cityForecast = [];
 
-
-
+/** Tracks how many accordion tabs have been created */
+var numberTabs = 0;
+/** Currently selected results tab */
+var checkedTab = null;
 
 // ==================================================
 // AJAX CALLERS
@@ -146,6 +150,9 @@ function getForecast(a_parameters){
         // Get forecast
         cityForecast = response.list;
 
+        //Display weather forecast
+        displayForecast (cityForecast);  
+        
         // Get places in the area
         getPlaces(t_return);
     });
@@ -164,8 +171,9 @@ function getPlaces(a_response){
     let t_url = api_url_places;
 
     // Add parameters to url
-    t_url += "radius?radius=500";
+    t_url += "radius?kinds=" + searchKindId + "&radius=5000";
     t_url += "&lon=" + a_response.lon + "&lat=" + a_response.lat;
+    console.log(t_url);
 
     // Update url in settings
     api_settings_places.url = t_url;
@@ -218,50 +226,168 @@ function getPlaceInfo(a_placeId){
     });
 }
 
-
-
-
 // ==================================================
 // DISPLAY FUNCTIONS
 // ==================================================
-//Fake result 1
-var response1 = {"name": "Kelsey Museum of Archaeology",
-"imageURL": "https://commons.wikimedia.org/wiki/File:Nickels_Arcade_at_night.jpg",
-"placeURL":"https://external-content.duckduckgo.com/iu/?u=https%3A%2F%2Ftse1.mm.bing.net%2Fth%3Fid%3DOIP.gSNCdRYeQKULxd5CDPUfmwHaFj%26pid%3DApi&f=1",
-"kinds":"museums,archaeological_museums,cultural,interesting_places,history_museums",
-"description":"Lorem ipsum",
-"conditions": ["hot","cold","rainy","snowy"]}
-
-// Fake result 2
-var response2 = {"name": "Nickels Arcade",
-"imageURL": "https://commons.wikimedia.org/wiki/File:Nickels_Arcade_at_night.jpg",
-"kinds":"historic_architecture,architecture,interesting_places,other_buildings_and_structures",
-"description": "Nickels Arcade is a commercial building located at 326-330 South State Street in Ann Arbor, Michigan. It was listed on the National Register of Historic Places in 1987. The building is notable as perhaps the only remaining example in Michigan of a free-standing commercial arcade building that was popularized by the Cleveland Arcade.",
-"conditions": ["hot","cold","rainy","snowy"]}
-
-// Array of search results
-var responseArray = [response1, response2,response1, response2,response1, response2,response1, response2,response1, response2];
 
  //Display a header for the results based on parameters passed
  function  displayCityHeader (searchCity, searchState, searchCountryName, searchKind){
         
-    let cityHeader = ""
+    let cityHeader = "";
+    $("#results-header").empty();
     if (searchCountryName === "USA") {
-        cityHeader = $("#destination-info").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchState + "</h4>");
+        if (searchState !=="") {
+            cityHeader = $("#results-header").html("Explore " + searchKind + " in " + searchCity + ", "  + searchState);
+        }else{
+            cityHeader = $("#results-header").html("Explore " + searchKind + " in " + searchCity); 
+        }    
     }else{
-        cityHeader = $("#destination-info").html("<h4>Explore " + searchKind + " in " + searchCity + ", "  + searchCountryName+ "</h4>");
+        cityHeader = $("#results-header").html("Explore " + searchKind + " in " + searchCity + ", "  + searchCountryName);
     }
-     $("container").append(cityHeader);
-    
-}
+     $("#results-header").append(cityHeader);
+ };
+   
+function currentWeather (searchCity){
 
+        var APIKey = "b842e13062ebcdc52faeb1014bc3a489";
+        let queryURL = "https://api.openweathermap.org/data/2.5/weather?q=" + searchCity + "&appid=" + APIKey;
+        console.log("Weather Query: " + queryURL);
 
+        //ajax call for local weather
+        $.ajax({
+          url: queryURL,
+          method: "GET"
+        }).then(function(response) {
+            console.log("Weather response: ")
+            console.log(response)
+            // Convert the temp to fahrenheit
+            let tempF = (response.main.temp - 273.15) * 1.80 + 32;
+            let roundedTemp = Math.floor(tempF);
+            $("#destination-info").empty();
+         
+            //temp elements added to html
+            // let tempDataF = $("<p>").text("Temp: " + roundedTemp + "F");
+            // let windData = $("<p>").text("Wind: " + response.wind.speed + "mph");
+            var iconCode = response.weather[0].icon;
+            var iconUrl = "https://openweathermap.org/img/wn/" + iconCode + ".png";
+            let weatherImg = $("<img>").attr("src", iconUrl);
+            //cityData.append(weatherImg, tempDataF, windData );
+            var cityData = "<tr><td>" + response.name + " weather today: " + "T - " + roundedTemp + "F,  W - " + response.wind.speed + "mph</td></tr>";
+            //var cityData = "<p>" + response.name + " weather today: T: " + roundedTemp +  + "F  W: " + response.wind.speed + "mph";
+            console.log(cityData);
+            // cityData.append(weatherImage);
+            $("#destination-info").append(weatherImg);
+
+            $("#destination-info").append(cityData);
+
+    }); //function response
+}; //currentWeather
+
+//Function to display 5 day weather forecast
+function displayForecast (cityForecast){
+
+    console.log ("city forecast from displayForecast");
+    console.log (cityForecast)
+
+    var iconUrl = "https://openweathermap.org/img/wn/" 
+    var png_suffix = ".png";
+    var wind_suffix = "mph";
+    var temp_suffix = "F";
+
+    //Empty the div holders
+    $("#destination-info").empty();
+    $("#display-weather").empty();
+
+    // For each day of the displayed weather
+    for(let i = 0; i < 6; i++){
+           
+        // Store data in the array
+        forecastArray[i] = {
+            day: moment(cityForecast[7 * i].dt_txt).format("dddd"),                     //Tuesday, Wednesday, Thursday
+            date: (cityForecast[7 * i].dt_txt).slice(8,10),                             //date number only
+            dayImage: iconUrl + cityForecast[7 * i].weather[0].icon + png_suffix,       //image
+            tempHigh: Math.round(cityForecast[7 * i].main.temp_max) + temp_suffix,      //max temp
+            wind: Math.round(cityForecast[7 * i].wind.speed) + wind_suffix              //wind
+        };
+    }//end of for loop for 5 days
+
+    console.log ("forecastArray: ");
+    console.log (forecastArray[0].day,forecastArray[1].day,forecastArray[2].day);
+    console.log (forecastArray[0].date,forecastArray[1].date,forecastArray[2].date);
+    console.log (forecastArray[0].tempHigh,forecastArray[1].tempHigh,forecastArray[2].tempHigh,forecastArray[3].tempHigh,forecastArray[4].tempHigh);
+    console.log (forecastArray[0].dayImage,forecastArray[1].dayImage,forecastArray[2].dayImage);
+    console.log (forecastArray[0].wind,forecastArray[1].wind,forecastArray[2].wind);
+
+    //let dispImg = "";
+    var dispImg
+    let dispTemp = "";
+    let dispWind = "";
+    let dispDate = "";
+    let dispDay = "";
+    let dispCol1 = "";
+    let dispCol2 = "";
+    let dispRow1 = "";
+    let dispRow2 = "";
+    let dispRow3 = "";
+    let dispRowfull1 = "";
+    let dispRowfull2 = "";
+    let dispTable = "";
+
+     // For each of the next 5 days
+    for(let i = 0; i < 6; i++){
+
+        //dispImg = $("<img>").attr("src", forecastArray[i].dayImage);
+        dispImg = "<img src=" + forecastArray[i].dayImage + ">"         //weather image for the day
+        dispTemp = forecastArray[i].tempHigh;                           //display temp
+        dispWind = forecastArray[i].wind;                               //display wind
+        dispDate = forecastArray[i].date;                               //display date number as 'dd' format
+        dispDay = forecastArray[i].day;                                 //display day of the week
+        dispCol1 = "<td class='w-td'>" + dispImg + dispDay + ", " + dispDate +  "</td>";
+        dispCol2 = "<td class='w-td'>"+ "Temp: " + dispTemp + "</td>";
+        dispCol3 = "<td class='w-td'>" + "Wind: " + dispWind + "</td>";
+        
+        dispRow1 = dispRow1 + dispCol1;
+        dispRow2 = dispRow2 + dispCol2;
+        dispRow3 = dispRow3 + dispCol3;
+     }//end of for loop
+
+     dispRowfull1 = "<tr>" + dispRow1 + "</tr>"; //assemble row 1
+     dispRowfull2 = "<tr>" + dispRow2 + "</tr>"; //assemble row 2
+     dispRowfull3 = "<tr>" + dispRow3 + "</tr>"; //assemble row 3
+     dispRowfull = dispRowfull1 + dispRowfull2 + dispRowfull3;  //assemble content
+     dispTable = "<table id='weather-table'>" + dispRowfull + "</table>";
+
+     //load weather div with the content
+     $("#display-weather").html(dispRowfull); 
+     
+     $("td").on("click",function(){
+
+     });
+        
+}//end of displayForecast
+
+/**
+ * @function displayPlace
+ * 
+ * @param {Object} a_placeInfo An object with the properties relating to information retrieved through the API
+ * 
+ * @description Display an object with the place info
+ */
 function displayPlace(a_placeInfo){
-    // Create wrapper div
-    var t_displayDiv = $("<div>");
+    // Increment tabs counter
+    numberTabs++;
 
-    // Create the text sections
-    var t_header = $("<h3>").text(a_placeInfo.name);
+    // Create wrapper div
+    var t_displayDiv = $("<div>").addClass("tab w-full overflow-hidden border-t");
+
+    // Create the toggler
+    var t_button = $("<input>").addClass("absolute opacity-0").attr("id","tab-single-" + numberTabs).attr("type","radio").attr("name","results-button");
+
+    // Create the header section
+    var t_header = $("<label>").text(a_placeInfo.name).addClass("block leading-normal cursor-pointer mb-0").attr("for","tab-single-" + numberTabs);
+
+    // Create body div
+    var t_bodyDiv = $("<div>").addClass("tab-content overflow-hidden leading-normal scrollable");
 
     // Create the address section   
     var t_address = $("<span>");
@@ -281,16 +407,79 @@ function displayPlace(a_placeInfo){
     var t_description = $("<p>").text(a_placeInfo.description);
 
     // Append to wrapper div
-    t_displayDiv.append(t_header).append(t_address).append(t_description);
+    t_bodyDiv.append(t_address).append(t_description);
+    t_displayDiv.append(t_button).append(t_header).append(t_bodyDiv);
 
     // Append to results div
     $("#results-wrapper").append(t_displayDiv);
+
+    // Add click listener to button
+    $(t_button).on("click",function(){
+        if(this != checkedTab){
+            checkedTab = this;
+            this.checked = true;
+        }
+        else{
+            this.checked = false;
+            checkedTab = null;
+        }
+    });
+}
+
+/**
+ * @function displayErrorModal
+ * 
+ * @param {String} a_error The type of error that occured
+ * 
+ * @param {String} a_message A message informing the user the details of the error
+ * 
+ * @description Displays a modal informing the user an error occured
+ */
+function displayErrorModal(a_error,a_message){
+    // Create wrapper div
+    var t_modalDiv = $("<div>").addClass("error-modal");
+
+    // Create header div
+    var t_headerDiv = $("<div>").addClass("modal-header");
+    var t_header = $("<h2>").addClass("modal-header-text").text("ERROR: " + a_error);
+    t_headerDiv.append(t_header);
+
+    // Create body div
+    var t_bodyDiv = $("<div>").addClass("modal-body").append($("<p>").text(a_message));
+
+    // Assemble modal
+    t_modalDiv.append(t_headerDiv).append(t_bodyDiv);
+
+    $(t_modalDiv).on("click",function(){
+        $(t_modalDiv).remove();
+    });
+
+    // Append modal to body
+    $(document.body).append(t_modalDiv);
 }
 
 // ==================================================
 // EVENT HANDLERS
 // ==================================================
 
+/**
+ * 
+ * 
+ */
+function handleCollapseButtonClick(a_event){
+    a_event.preventDefault();
+    // Store icon svgs
+    var collapse_icon = "<svg width='100\%' height='1em' viewBox='0 0 16 16' class='bi bi-arrows-collapse' fill='currentColor' xmlns='http://www.w3.org/2000/svg'><path fill-rule='evenodd' d='M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8zm6-7a.5.5 0 0 1 .5.5V6a.5.5 0 0 1-1 0V1.5A.5.5 0 0 1 8 1z'/><path fill-rule='evenodd' d='M10.354 3.646a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 1 1 .708-.708L8 5.293l1.646-1.647a.5.5 0 0 1 .708 0zM8 15a.5.5 0 0 0 .5-.5V10a.5.5 0 0 0-1 0v4.5a.5.5 0 0 0 .5.5z'/><path fill-rule='evenodd' d='M10.354 12.354a.5.5 0 0 0 0-.708l-2-2a.5.5 0 0 0-.708 0l-2 2a.5.5 0 0 0 .708.708L8 10.707l1.646 1.647a.5.5 0 0 0 .708 0z'/></svg>";
+    var expand_icon = "<svg width='100\%' height='1em' viewBox='0 0 16 16' class='bi bi-arrows-expand' fill='currentColor' xmlns='http://www.w3.org/2000/svg'/><path fill-rule='evenodd' d='M2 8a.5.5 0 0 1 .5-.5h11a.5.5 0 0 1 0 1h-11A.5.5 0 0 1 2 8zm6-1.5a.5.5 0 0 0 .5-.5V1.5a.5.5 0 0 0-1 0V6a.5.5 0 0 0 .5.5z'/><path fill-rule='evenodd' d='M10.354 3.854a.5.5 0 0 0 0-.708l-2-2a.5.5 0 0 0-.708 0l-2 2a.5.5 0 1 0 .708.708L8 2.207l1.646 1.647a.5.5 0 0 0 .708 0zM8 9.5a.5.5 0 0 1 .5.5v4.5a.5.5 0 0 1-1 0V10a.5.5 0 0 1 .5-.5z'/><path fill-rule='evenodd' d='M10.354 12.146a.5.5 0 0 1 0 .708l-2 2a.5.5 0 0 1-.708 0l-2-2a.5.5 0 0 1 .708-.708L8 13.793l1.646-1.647a.5.5 0 0 1 .708 0z'/></svg>";
+    
+    // Toggle icons
+    if($(this).hasClass("collapsed") === true){
+        $(a_event.target).html(collapse_icon);
+    }
+    else if($(this).hasClass("collapsed") === false){
+        $(a_event.target).html(expand_icon);
+    }
+}
 
 // ==================================================
 // RUNTIME
@@ -338,8 +527,13 @@ $(document).ready(function () {
     $("#search-btn").click(function (event) {
         event.preventDefault();
 
+
+
         // Clear search results
         searchResults = [];
+
+        // Clear search div
+        $("#results-wrapper").empty();
 
          //grab search country from the select country dropdown box
          let searchCountry = $("#input-select-country").val().trim();
@@ -355,14 +549,12 @@ $(document).ready(function () {
         //grab search city from input field
          let searchCity = $("#input-text-city").val().trim();
          if (searchCity === ''){
-            alert('City can not be left blank');  //remove
-            
+            displayErrorModal("Invalid Search Parameters","Please enter a city name"); 
          }
 
          //grab the id of the interest/kind user selected
          if (searchKindId === "") {
-            searchKindId = $("#list-kinds li.active").attr("data-target");
-            
+            searchKindId = $("#list-kinds li.active").attr("data-target");  
         }
         
         // grab the name of the interest/kind user selected
@@ -374,6 +566,8 @@ $(document).ready(function () {
          console.log ("You have selected the country - " + searchCountry);      
          console.log ("You have selected the kindID - " + searchKindId);
          console.log ("You have selected the kind - " + searchKind);
+
+         //currentWeather(searchCity);
          
          //Display header for the search results based on the parameters entered
          displayCityHeader (searchCity, searchState, searchCountryName, searchKind);
@@ -386,6 +580,8 @@ $(document).ready(function () {
         // Gets the forecast, and calls methods to get places
         getForecast(t_searchParameters);
         
+        // If no results found in 5 seconds, display error
+        setTimeout(function(){ if(searchResults.length === 0){ displayErrorModal("No Results Found","The search did not return any places, please enter different parameters and search again."); } },3000);
     });
 
 
@@ -412,4 +608,7 @@ $(document).ready(function () {
             selectState.add(option);
         }   
     }
+
+    $(".collapse-button").on("click",handleCollapseButtonClick);
+
 })
